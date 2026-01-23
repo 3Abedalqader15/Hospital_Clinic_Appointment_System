@@ -1,9 +1,15 @@
-﻿namespace Hospital_Clinic_Appointment_System.Model
+﻿using Hospital_Clinic_Appointment_System.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Hospital_Clinic_Appointment_System.Model
 {
     public class Doctor
     {
+        [Key]
         public int Id { set; get; }
 
+        [ForeignKey("user")]
         public int User_Id { set; get; }
 
         public string Specialization { set; get; }
@@ -21,7 +27,10 @@
         public DateTime Created_At { set; get; }
 
 
-
+        // Relationships
+        public User user { get; set; }
+        public ICollection<TimeSlot> TimeSlots { get; set; }
+        public ICollection<Appointment> Appointments { get; set; }
 
 
 
