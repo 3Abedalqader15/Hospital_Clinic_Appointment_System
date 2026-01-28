@@ -1,15 +1,15 @@
-﻿using Hospital_Clinic_Appointment_System.Models;
+﻿using Hospital_Clinic_Appointment_System.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Hospital_Clinic_Appointment_System.Model
+namespace Hospital_Clinic_Appointment_System.Entities
 {
     public class Doctor
     {
         [Key]
         public int Id { set; get; }
 
-        [ForeignKey("user")]
+        //[ForeignKey("user")]
         public int User_Id { set; get; }
 
         public string Specialization { set; get; }
