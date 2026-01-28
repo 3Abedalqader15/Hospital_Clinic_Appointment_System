@@ -12,6 +12,8 @@ namespace Hospital_Clinic_Appointment_System.Entities
         //[ForeignKey("user")]
         public int User_Id { set; get; }
 
+        public int Name { set; get; }
+
         public string Specialization { set; get; }
 
         public string LicenseNumber { set; get; }

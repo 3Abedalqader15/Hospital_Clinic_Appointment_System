@@ -1,0 +1,73 @@
+﻿using Hospital_Clinic_Appointment_System.App_Context;
+using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+
+namespace Hospital_Clinic_Appointment_System.Repositories
+{
+    public class GenericReository<T> : IGenericRepository<T> where T : class
+    {
+        private readonly DBContext context;
+        private readonly DbSet<T> dbSet;
+
+        public GenericReository (DBContext context )
+        {
+            this.context = context;
+            this.dbSet = context.Set<T>();
+        }
+
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await dbSet.ToListAsync();
+        }
+        public async Task<T?> GetByIdAsync(int id)
+        {
+
+            return await dbSet.FindAsync(id);
+        }
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await dbSet.Where(predicate).ToListAsync();
+
+
+        }
+
+        public async Task AddAsync(T entity)
+        {
+            await dbSet.AddAsync(entity);
+
+            
+        }
+
+        public void Delete(T entity)
+        {
+
+             dbSet.Remove(entity);
+
+        }
+
+        public void Update(T entity)
+        {
+            dbSet.Update(entity);
+
+        }
+        public async Task SaveChangesAsync() 
+        {
+
+            await context.SaveChangesAsync();
+
+        }
+
+
+
+
+
+
+
+
+
+
+    }
+}
