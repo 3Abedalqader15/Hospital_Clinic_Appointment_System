@@ -12,7 +12,11 @@ namespace Hospital_Clinic_Appointment_System.Entities
         //[ForeignKey("user")]
         public int User_Id { set; get; }
 
-        public int Name { set; get; }
+        public string Name { set; get; }
+
+      
+
+        
 
         public string Specialization { set; get; }
 
@@ -22,6 +26,7 @@ namespace Hospital_Clinic_Appointment_System.Entities
 
         public string Bio {set; get; }
 
+       
         public string profilePictureUrl { set; get; }
 
         public bool isActive { set; get; }

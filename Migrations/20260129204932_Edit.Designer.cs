@@ -4,6 +4,7 @@ using Hospital_Clinic_Appointment_System.App_Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital_Clinic_Appointment_System.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20260129204932_Edit")]
+    partial class Edit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,9 +94,8 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Name")
+                        .HasColumnType("int");
 
                     b.Property<string>("Specialization")
                         .IsRequired()
@@ -115,34 +117,6 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                         .IsUnique();
 
                     b.ToTable("Doctors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Bio = "Cardiac surgeon",
-                            Created_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExperienceYears = 10,
-                            LicenseNumber = "DOC-001",
-                            Name = "Dr. Ahmad Ali",
-                            Specialization = "Cardiology",
-                            User_Id = 1001,
-                            isActive = true,
-                            profilePictureUrl = "/images/doctors/ahmad.jpg"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Bio = "orthopedic specialist",
-                            Created_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExperienceYears = 8,
-                            LicenseNumber = "DOC-002",
-                            Name = "Dr. Ali Ahmad",
-                            Specialization = "Orthopedics",
-                            User_Id = 1002,
-                            isActive = true,
-                            profilePictureUrl = "/images/doctors/ali.jpg"
-                        });
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.Patient", b =>
@@ -186,30 +160,13 @@ namespace Hospital_Clinic_Appointment_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Doctor"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Patient"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.TimeSlot", b =>
@@ -287,47 +244,6 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1000,
-                            BirthDay = new DateTime(2003, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Created_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Abood@Gmail.com",
-                            IsEmailConfirmed = true,
-                            Name = "Abood321",
-                            Password = "123456789@",
-                            Phone_Number = "0779875103",
-                            Updated_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            isActive = true
-                        },
-                        new
-                        {
-                            Id = 1001,
-                            BirthDay = new DateTime(1999, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Created_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "ahmadali@Gmail.com",
-                            IsEmailConfirmed = true,
-                            Name = "Dr.Ahmad Ali",
-                            Password = "AhmadAli@123",
-                            Phone_Number = "0779875103",
-                            Updated_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            isActive = true
-                        },
-                        new
-                        {
-                            Id = 1002,
-                            BirthDay = new DateTime(1998, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Created_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "alihmad@Gmail.com",
-                            IsEmailConfirmed = true,
-                            Name = "Dr.Ali Ahmad",
-                            Password = "AliAhmad@1234",
-                            Phone_Number = "0779875103",
-                            Updated_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            isActive = true
-                        });
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.UserRole", b =>
@@ -346,26 +262,6 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     b.HasIndex("Role_Id");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            User_Id = 1000,
-                            Role_Id = 3,
-                            Id = 0
-                        },
-                        new
-                        {
-                            User_Id = 1001,
-                            Role_Id = 2,
-                            Id = 0
-                        },
-                        new
-                        {
-                            User_Id = 1002,
-                            Role_Id = 2,
-                            Id = 0
-                        });
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.Appointment", b =>

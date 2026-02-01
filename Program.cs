@@ -1,5 +1,7 @@
 using Hospital_Clinic_Appointment_System.App_Context;
-using Hospital_Clinic_Appointment_System.Mapping;
+
+using Hospital_Clinic_Appointment_System.Repositories;
+using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -7,9 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+// Repositories
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+
+
 
 // Database
 builder.Services.AddDbContext<DBContext>(options =>
@@ -34,15 +41,21 @@ if (!app.Environment.IsDevelopment())
   
     app.UseHsts();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
 
 app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
+
+
+app.MapControllers();
 
 app.Run();

@@ -4,6 +4,7 @@ using Hospital_Clinic_Appointment_System.App_Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital_Clinic_Appointment_System.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20260201130232_Edit2")]
+    partial class Edit2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,9 +94,8 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Name")
+                        .HasColumnType("int");
 
                     b.Property<string>("Specialization")
                         .IsRequired()
@@ -115,34 +117,6 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                         .IsUnique();
 
                     b.ToTable("Doctors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Bio = "Cardiac surgeon",
-                            Created_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExperienceYears = 10,
-                            LicenseNumber = "DOC-001",
-                            Name = "Dr. Ahmad Ali",
-                            Specialization = "Cardiology",
-                            User_Id = 1001,
-                            isActive = true,
-                            profilePictureUrl = "/images/doctors/ahmad.jpg"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Bio = "orthopedic specialist",
-                            Created_At = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExperienceYears = 8,
-                            LicenseNumber = "DOC-002",
-                            Name = "Dr. Ali Ahmad",
-                            Specialization = "Orthopedics",
-                            User_Id = 1002,
-                            isActive = true,
-                            profilePictureUrl = "/images/doctors/ali.jpg"
-                        });
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.Patient", b =>
