@@ -4,10 +4,11 @@ namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 {
     public interface IGenericRepository<T> where T : class  
     {
-        Task<IEnumerable<T>> GetAllAsync(); 
+        Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
         Task<T?> GetByIdAsync(int id); // T? allows for null return if not found
         Task AddAsync(T entity);
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate); // For filtering entities based on a condition
+
+        Task<T?> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
 
         void Update(T entity);
         void Delete(T entity);

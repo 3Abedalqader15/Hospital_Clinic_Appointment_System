@@ -4,6 +4,7 @@ using Hospital_Clinic_Appointment_System.App_Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital_Clinic_Appointment_System.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20260202181958_Edit4")]
+    partial class Edit4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,6 +81,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bio")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created_At")
@@ -105,6 +109,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("profilePictureUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -219,9 +224,8 @@ namespace Hospital_Clinic_Appointment_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
@@ -338,6 +342,9 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     b.Property<int>("Role_Id")
                         .HasColumnType("int");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.HasKey("User_Id", "Role_Id");
 
                     b.HasIndex("Role_Id");
@@ -348,17 +355,20 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                         new
                         {
                             User_Id = 1000,
-                            Role_Id = 3
+                            Role_Id = 3,
+                            Id = 0
                         },
                         new
                         {
                             User_Id = 1001,
-                            Role_Id = 2
+                            Role_Id = 2,
+                            Id = 0
                         },
                         new
                         {
                             User_Id = 1002,
-                            Role_Id = 2
+                            Role_Id = 2,
+                            Id = 0
                         });
                 });
 

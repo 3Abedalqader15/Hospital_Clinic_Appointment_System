@@ -42,6 +42,7 @@ public class DoctorRepository : GenericReository<Doctor>, IDoctorRepository
     public async Task<Doctor?> GetDoctorWithTimeSlotsAsync(int doctorId)
     {
         return await context.Doctors
+            .Include(d=>d.user)
             .Include(d => d.TimeSlots)
             .FirstOrDefaultAsync(d => d.Id == doctorId);
     }

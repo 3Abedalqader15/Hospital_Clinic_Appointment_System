@@ -1,4 +1,5 @@
 ﻿using Hospital_Clinic_Appointment_System.App_Context;
+using Hospital_Clinic_Appointment_System.Entities;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -18,20 +19,36 @@ namespace Hospital_Clinic_Appointment_System.Repositories
         }
 
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
         {
-            return await dbSet.ToListAsync();
+            IQueryable<T> query = dbSet;
+            if (includes != null && includes.Length > 0)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query.ToListAsync();
         }
+
         public async Task<T?> GetByIdAsync(int id)
         {
 
             return await dbSet.FindAsync(id);
         }
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        // New: FirstOrDefault with predicate and optional includes
+        public async Task<T?> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
-            return await dbSet.Where(predicate).ToListAsync();
-
-
+            IQueryable<T> query = dbSet;
+            if (includes != null && includes.Length > 0)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query.FirstOrDefaultAsync(predicate);
         }
 
         public async Task AddAsync(T entity)
@@ -48,11 +65,11 @@ namespace Hospital_Clinic_Appointment_System.Repositories
 
         }
 
-        public void Update(T entity)
+       public void Update(T entity)
         {
             dbSet.Update(entity);
-
         }
+
         public async Task SaveChangesAsync() 
         {
 

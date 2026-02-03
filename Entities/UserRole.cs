@@ -6,8 +6,7 @@ namespace Hospital_Clinic_Appointment_System.Entities
 {
     public class UserRole
     {
-        [Key]
-        public int Id { get; set; }
+        
 
         //[ForeignKey("user")]
         public int User_Id { get; set; }

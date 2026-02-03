@@ -22,9 +22,9 @@ namespace Hospital_Clinic_Appointment_System.Entities
 
         public bool isActive { set; get; }
 
-        public DateTime Created_At { set; get; } 
+        public DateTime Created_At { set; get; } = DateTime.UtcNow;
 
-        public DateTime Updated_At { set; get; }
+        public DateTime Updated_At { set; get; } =  DateTime.UtcNow;
 
         // Relationships
         public ICollection<UserRole> UserRoles { get; set; }

@@ -10,7 +10,7 @@ namespace Hospital_Clinic_Appointment_System.Entities
         public int Id { set; get; }
 
         //[ForeignKey("user")]
-        public int User_Id { set; get; }
+        public int User_Id { set; get; } 
 
         public string Name { set; get; }
 
@@ -24,14 +24,14 @@ namespace Hospital_Clinic_Appointment_System.Entities
 
         public int ExperienceYears { set; get; }
 
-        public string Bio {set; get; }
+        public string? Bio {set; get; }
 
        
-        public string profilePictureUrl { set; get; }
+        public string? profilePictureUrl { set; get; }
 
         public bool isActive { set; get; }
 
-        public DateTime Created_At { set; get; }
+        public DateTime Created_At { set; get; }= DateTime.UtcNow;
 
 
         // Relationships

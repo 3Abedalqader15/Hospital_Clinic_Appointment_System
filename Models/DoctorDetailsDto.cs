@@ -14,7 +14,7 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         [Required]
         [MaxLength(50)]
-        public int Name { set; get; }
+        public string Name { set; get; }
 
         [Required]
         [MaxLength(100)]
@@ -22,7 +22,7 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         [Required]
         [MaxLength(13)]
-        public string PhoneNumber { set; get; }
+        public string Phone_Number { set; get; }
 
         [Required]
         [MaxLength(50)]
@@ -44,7 +44,9 @@ namespace Hospital_Clinic_Appointment_System.Models
         public bool IsActive { get; set; }
 
 
-        public ICollection<TimeSlot?> TimeSlots { get; set; }
+        public ICollection<TimeSloteShortDto> TimeSlots { get; set; }
+
+        public ICollection<AppointmentShortDto> Appointments { get; set; }
 
 
     }

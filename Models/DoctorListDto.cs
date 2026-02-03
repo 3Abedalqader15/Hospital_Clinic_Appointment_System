@@ -33,5 +33,6 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         public User user { get;  set; }
 
+
     }
 }
