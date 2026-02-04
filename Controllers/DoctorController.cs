@@ -35,6 +35,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 Name = d.user?.Name ?? d.Name,
                 Specialization = d.Specialization,
                 isActive = d.isActive,
+                ExperienceYears =d.ExperienceYears,
                 Email = d.user?.Email ?? string.Empty,
                 Phone_Number = d.user?.Phone_Number ?? string.Empty
             }).ToList();

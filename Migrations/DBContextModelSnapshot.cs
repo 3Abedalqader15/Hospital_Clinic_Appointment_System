@@ -66,7 +66,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.Doctor", b =>
@@ -112,7 +112,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     b.HasIndex("User_Id")
                         .IsUnique();
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
 
                     b.HasData(
                         new
@@ -174,7 +174,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     b.HasIndex("User_Id")
                         .IsUnique();
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.Role", b =>
@@ -191,7 +191,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -242,7 +242,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("TimeSlots");
+                    b.ToTable("TimeSlots", (string)null);
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.User", b =>
@@ -286,7 +286,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
@@ -342,7 +342,7 @@ namespace Hospital_Clinic_Appointment_System.Migrations
 
                     b.HasIndex("Role_Id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
 
                     b.HasData(
                         new

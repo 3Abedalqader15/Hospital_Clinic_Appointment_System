@@ -31,7 +31,7 @@ namespace Hospital_Clinic_Appointment_System.Models
         public bool isActive { get; set; }
 
 
-        public User user { get;  set; }
+        public UserDto user { get;  set; }
 
 
     }

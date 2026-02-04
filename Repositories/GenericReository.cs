@@ -37,7 +37,7 @@ namespace Hospital_Clinic_Appointment_System.Repositories
 
             return await dbSet.FindAsync(id);
         }
-        // New: FirstOrDefault with predicate and optional includes
+        // Edit : FirstOrDefault with predicate and optional includes
         public async Task<T?> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = dbSet;

@@ -19,8 +19,8 @@ namespace Hospital_Clinic_Appointment_System.Entities
         public bool IsActive { get; set; } = true;
 
         // Relationships
-        public User user { get; set; }
-        public ICollection<Appointment> Appointments { get; set; }
+        public User? user { get; set; }
+        public ICollection<Appointment?> Appointments { get; set; }
 
 
 
