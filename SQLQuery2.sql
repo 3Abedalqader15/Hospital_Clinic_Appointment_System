@@ -1,11 +1,11 @@
--- ?????: ???? ???????? ???????
+
 DELETE FROM TimeSlots;
 DELETE FROM Appointments;
 DELETE FROM Doctors;
 DELETE FROM Patients;
 DELETE FROM UserRoles;
 
--- ??????: ??? UserRoles (???? ?? ?? ?????)
+--  UserRoles 
 INSERT INTO UserRoles (User_Id, Role_Id) VALUES
 (1000, 3),  -- Abood321 - Admin
 (1001, 1),  -- Dr.Ahmad Ali - Doctor
@@ -23,7 +23,7 @@ INSERT INTO UserRoles (User_Id, Role_Id) VALUES
 (1037, 2),  -- Nabil Srour - Patient
 (1038, 2);  -- Dalia Awad - Patient
 
--- ??????: ??? ???????? (4 ??? - ?? ?? ?????)
+
 INSERT INTO Doctors (User_Id, Specialization, LicenseNumber, ExperienceYears, Bio, profilePictureUrl, isActive, Created_At, Name)
 VALUES
 (1001, 'Cardiology', 'DOC-001', 10, 'Cardiac surgeon specialist', '/images/doctor1.jpg', 1, '2026-01-30', 'Dr.Ahmad Ali'),
@@ -31,7 +31,7 @@ VALUES
 (1026, 'General Medicine', 'DOC-003', 5, 'General practitioner', '/images/doctor3.jpg', 1, '2026-02-02', 'Dr.Abdalhkeem'),
 (1028, 'Pediatrics', 'DOC-004', 7, 'Children specialist', '/images/doctor4.jpg', 1, '2026-02-02', 'Dr.Abood');
 
--- ??????: ??? ??????
+
 INSERT INTO Patients (User_Id, MedicalHistory, EmergencyNumber, isActive, Name)
 VALUES
 (1029, 'No major issues', '0779875110', 1, 'Yazan Qasem'),
@@ -45,31 +45,31 @@ VALUES
 (1037, 'Diabetes', '0777340615', 1, 'Nabil Srour'),
 (1038, 'No major issues', '0779875115', 1, 'Dalia Awad');
 
--- ??????: TimeSlots - ?????? ????? ??? ????? ??????
+--  TimeSlots 
 -- 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
 INSERT INTO TimeSlots (DoctorId, DayOfWeek, StartTime, EndTime, SlotDuration, isActive)
 VALUES
--- Dr.Ahmad Ali (Id=1) - ???? ????? ?????????
+-- Dr.Ahmad Ali (Id=1) 
 (20, 'Sunday', '09:00:00', '12:00:00', 30, 1),
 (20, 'Tuesday', '09:00:00', '12:00:00', 30, 1),
 (20, 'Thursday', '14:00:00', '17:00:00', 30, 1),
 
--- Dr.Ali Ahmad (Id=2) - ???? ??????? ?????????
+-- Dr.Ali Ahmad (Id=2) 
 (21, 'Monday', '10:00:00', '13:00:00', 30, 1),
 (21, 'Wednesday', '10:00:00', '13:00:00', 30, 1),
 (21, 'Thursday', '09:00:00', '12:00:00', 30, 1),
 
--- Dr.Abdalhkeem (Id=3) - ???? ????? ????????? ???????
+-- Dr.Abdalhkeem (Id=3) 
 (22, 'Sunday', '14:00:00', '18:00:00', 45, 1),
 (22, 'Tuesday', '14:00:00', '18:00:00', 45, 1),
 (22, 'Thursday', '10:00:00', '14:00:00', 45, 1),
 
--- Dr.Abood (Id=4) - ???? ??????? ????????? ???????
+-- Dr.Abood (Id=4) 
 (23, 'Monday', '15:00:00', '19:00:00', 60, 1),
 (23, 'Wednesday', '15:00:00', '19:00:00', 60, 1),
 (23, 'Friday', '09:00:00', '13:00:00', 60, 1);
 
--- ??????: Appointments
+-- Appointments
 INSERT INTO Appointments (DoctorId, PatientId, AppointmentDate, Reason, Status, Notes, ReminderSent, CreatedAt, UpdatedAt)
 VALUES
 (20, 23, '2026-02-09 09:00:00', 'Regular checkup', 'Scheduled', 'First visit', 0, GETDATE(), GETDATE()),
@@ -81,7 +81,7 @@ VALUES
 (23, 29, '2026-02-10 15:00:00', 'Vaccination', 'Scheduled', '6 months', 0, GETDATE(), GETDATE()),
 (23, 30, '2026-02-10 16:00:00', 'Growth check', 'Scheduled', 'xxxxx', 0, GETDATE(), GETDATE());
 
--- ???? ?? ???????
+
 SELECT 'Doctors' as [Table], COUNT(*) as Count FROM Doctors
 UNION ALL SELECT 'Patients', COUNT(*) FROM Patients
 UNION ALL SELECT 'TimeSlots', COUNT(*) FROM TimeSlots
