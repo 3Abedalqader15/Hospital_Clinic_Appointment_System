@@ -16,7 +16,9 @@ namespace Hospital_Clinic_Appointment_System.Entities
 
       
 
-        
+
+
+
 
         public string Specialization { set; get; }
 

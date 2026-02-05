@@ -8,7 +8,7 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+//builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -38,9 +38,11 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    //app.UseExceptionHandler("/Error");
   
-    app.UseHsts();
+    //app.UseHsts();
 }
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -52,11 +54,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+//app.MapStaticAssets();
+//app.MapRazorPages()
+//   .WithStaticAssets();
+
 
 
 app.MapControllers();
+
 
 app.Run();

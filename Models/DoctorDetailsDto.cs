@@ -46,7 +46,7 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         public ICollection<TimeSloteShortDto> TimeSlots { get; set; }
 
-        public ICollection<AppointmentShortDto> Appointments { get; set; }
+        //public ICollection<AppointmentShortDto> Appointments { get; set; }
 
 
     }
