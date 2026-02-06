@@ -2,14 +2,15 @@
 {
     public class updateDoctorDto
     {
-       
+
+       public int Id { set; get; }
         public int User_Id { set; get; }
 
-        public string Name { set; get; }
+        public string? Name { set; get; }
 
-        public string Specialization { set; get; }
+        public string? Specialization { set; get; }
 
-        public string LicenseNumber { set; get; }
+        public string? LicenseNumber { set; get; }
 
         public int ExperienceYears { set; get; }
 

@@ -3,7 +3,7 @@ using Hospital_Clinic_Appointment_System.Models;
 
 namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 {
-    public interface IPatientRepository : IGenericRepository<Patient>
+    public interface IPatientRepository : GenericRepository<Patient>
     {
         Task<IEnumerable<AppointmentShortDto>> GetAppointmentDatesByPatientIdAsync(int patientId);
 

@@ -1,6 +1,6 @@
 ﻿namespace Hospital_Clinic_Appointment_System.Models
 {
-    public class UserDto
+    public class CreateUserDto
     {
         public int Id { set; get; }
 
@@ -17,11 +17,5 @@
         public bool IsEmailConfirmed { set; get; }
 
         public bool isActive { set; get; }
-
-        public DateTime Created_At { set; get; } = DateTime.UtcNow;
-
-        public DateTime Updated_At { set; get; } = DateTime.UtcNow;
-
-        public List<string> Roles { get; set; } = new List<string>();
     }
 }

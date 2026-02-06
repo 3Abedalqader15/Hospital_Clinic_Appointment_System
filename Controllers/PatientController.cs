@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Clinic_Appointment_System.Controllers
 {
-    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("Dashboard/[controller]")]
     [ApiController]
     public class PatientController : ControllerBase
     {
@@ -18,14 +18,14 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             this.patientRepository = patientRepository;
         }
 
-        [HttpPost("add")] // Post: api/patient/add
+        [HttpPost("add")] // Post: Dashboard/patient/add
 
         public async Task<ActionResult<PatientShortDto>> AddPatientAsync(CreatePatientDto createPatient)
         {
             var patient = new Patient
             {
                 Id = createPatient.Id,
-                Name =createPatient.Name ,
+                Name = createPatient.Name ,
                 Email = createPatient.Email ,
                 Phone_Number = createPatient.Phone_Number,
                 EmergencyNumber = createPatient.EmergencyNumber,
@@ -58,7 +58,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
 
 
-        [HttpGet("All")] // Get : api/Patient/All
+        [HttpGet("All")] // Get : Dashboard/Patient/All
         public async Task<ActionResult<IEnumerable<PatientShortDto>>> GetAllPatientsAsync()
         {
             var patients = await patientRepository.GetAllWithIncludesAsync(p => p.user);
@@ -80,7 +80,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             return Ok(dto); // Return 200 OK with the list of patients
         }
 
-        [HttpGet("{id:int}")] // Get : api/Patient/{id}
+        [HttpGet("{id:int}")] // Get : Dashboard/Patient/{id}
         public async Task<ActionResult<PatientShortDto>> GetPatientByIdAsync([FromRoute] int id)
         {
             var patient = await patientRepository.FirstOrDefaultWithIncludesAsync(p => p.Id == id, p => p.user);
@@ -101,6 +101,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
         }
 
+        // Get: Dashboard/Patient/{id}/MedicalHistory
         [HttpGet("{id:int}/MedicalHistory")]
         public async Task<ActionResult<PatientShortDto>> GetMedicalHistoryByPatientIdAsync([FromRoute] int id)
         {
@@ -123,7 +124,8 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
             return Ok(dto);
         }
-        
+
+        // Get: Dashboard/Patient/AppointmentDate/{id}
         [HttpGet("AppointmentDate/{id:int}")]
         public async Task<ActionResult<IEnumerable<AppointmentShortDto>>> GetAppointmentDateByPatientIdAsync([FromRoute] int id)
         {
@@ -136,7 +138,9 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             return Ok(appointments);
         }
 
-        [HttpDelete("Delete/{id:int}")]
+        // Delete: Dashboard/Patient/{id}/Delete
+
+        [HttpDelete("{id:int}/Delete")]
         public async Task<IActionResult> DeletePatientAsync([FromRoute] int id)
         {
             if (id <= 0)
@@ -185,11 +189,12 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 });
             }
         }
+        // Update: Dashboard/Patient/{id}/update
 
         [HttpPut("{id:int}/update")]
         public async Task<IActionResult> UpdatePatientAsync([FromRoute] int id, [FromBody] PatientShortDto patientDto)
         {
-            // التحقق من الـ id
+           
             if (id <= 0)
             {
                 return BadRequest("Invalid patient ID");
@@ -201,7 +206,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 return NotFound($"Patient with ID {id} not found");
             }
 
-            // تحديث البيانات
+            
             patient.Name = patientDto.Name ?? patient.Name;
             patient.MedicalHistory = patientDto.MedicalHistory ?? patient.MedicalHistory;
             patient.EmergencyNumber = patientDto.EmergencyNumber ?? patient.EmergencyNumber;
@@ -209,7 +214,6 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             patientRepository.Update(patient);
             await patientRepository.SaveChangesAsync();
 
-            // إرجاع DTO بدلاً من Entity
             var dto = new PatientShortDto
             {
                 Id =patient.Id,
