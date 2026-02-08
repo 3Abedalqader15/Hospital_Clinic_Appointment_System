@@ -2,7 +2,7 @@
 
 namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 {
-    public interface IUserRepository : GenericRepository<User>
+    public interface IUserRepository : IGenericRepository<User>
     {
 
         Task<User> GetUserByEmailAsync(string email); 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Clinic_Appointment_System.Repositories
 {
-    public class PatientRepository : GenericReository<Patient> , IPatientRepository
+    public class PatientRepository : GenericRepository<Patient> , IPatientRepository
     {
         private readonly DBContext context;
 

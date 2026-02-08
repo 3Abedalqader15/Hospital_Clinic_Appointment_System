@@ -2,7 +2,7 @@
 
 namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 {
-    public interface GenericRepository<T> where T : class  
+    public interface IGenericRepository<T> where T : class  
     {
         Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
         Task<T?> GetByIdAsync(int id); 

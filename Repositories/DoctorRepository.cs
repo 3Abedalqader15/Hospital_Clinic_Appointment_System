@@ -5,7 +5,7 @@ using Hospital_Clinic_Appointment_System.Repositories;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
-public class DoctorRepository : GenericReository<Doctor>, IDoctorRepository
+public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 {
     private readonly DBContext context;
 

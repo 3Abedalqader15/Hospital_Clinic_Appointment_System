@@ -3,7 +3,7 @@ using Hospital_Clinic_Appointment_System.Models;
 
 namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 {
-    public interface IDoctorRepository : GenericRepository<Doctor>
+    public interface IDoctorRepository : IGenericRepository<Doctor>
     {
 
         Task<IEnumerable<Doctor>> GetActiveDoctorsAsync();
