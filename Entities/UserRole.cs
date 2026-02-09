@@ -11,15 +11,17 @@ namespace Hospital_Clinic_Appointment_System.Entities
         //[ForeignKey("user")]
         public int User_Id { get; set; }
 
+        public User user { get; set; }
+
         //[ForeignKey("role")]
         public int Role_Id { get; set; }
 
-
-        // Relationships
-
-        public User user { get; set; }
-
         public Role role { get; set; }
+        
+
+
+
+
 
 
 

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital_Clinic_Appointment_System.Entities
 {
-    public class Patient
+    public class Patient : IEntity
     {
         [Key]
         public int Id { get; set; }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital_Clinic_Appointment_System.Entities
 {
-    public class Doctor
+    public class Doctor : IAuditableEntity
     {
         [Key]
         public int Id { set; get; }
@@ -13,13 +13,6 @@ namespace Hospital_Clinic_Appointment_System.Entities
         public int User_Id { set; get; } 
 
         public string Name { set; get; }
-
-      
-
-
-
-
-
         public string Specialization { set; get; }
 
         public string LicenseNumber { set; get; }
@@ -33,7 +26,9 @@ namespace Hospital_Clinic_Appointment_System.Entities
 
         public bool isActive { set; get; }
 
-        public DateTime Created_At { set; get; }= DateTime.UtcNow;
+        public DateTime CreatedAt { set; get; }= DateTime.UtcNow;
+
+        public DateTime? UpdatedAt { set; get; } = DateTime.UtcNow;
 
 
         // Relationships

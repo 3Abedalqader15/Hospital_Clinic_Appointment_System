@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hospital_Clinic_Appointment_System.Entities
 {
-    public class User
+    public class User : IAuditableEntity 
     {
         [Key]
         public int Id { set; get; }
@@ -24,9 +24,9 @@ namespace Hospital_Clinic_Appointment_System.Entities
 
         public bool isActive { set; get; }
 
-        public DateTime? Created_At { set; get; } = DateTime.UtcNow;
+        public DateTime CreatedAt { set; get; } = DateTime.UtcNow;
 
-        public DateTime? Updated_At { set; get; } =  DateTime.UtcNow;
+        public DateTime? UpdatedAt { set; get; } =  DateTime.UtcNow;
 
         // Relationships
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();

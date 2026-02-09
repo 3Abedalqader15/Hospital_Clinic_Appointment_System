@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital_Clinic_Appointment_System.Entities
 {
-   public class TimeSlot 
+   public class TimeSlot : IEntity
     {
   
        [Key]

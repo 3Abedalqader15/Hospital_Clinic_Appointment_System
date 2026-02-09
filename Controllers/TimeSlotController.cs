@@ -43,7 +43,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
             };
 
-            return CreatedAtRoute("GetTimeByDoctorId", new { id = dto.DoctorId }, dto);
+            return CreatedAtRoute("GetTimeByDoctorId", new { doctorId = timeslot.DoctorId }, dto);
 
         }
 
@@ -70,7 +70,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
         }
 
-        [HttpGet("{doctorId:int}/Doctor")] // // Get : api/TimeSlot/all
+        [HttpGet("{doctorId:int}/Doctor" , Name = "GetTimeByDoctorId")] // // Get : api/TimeSlot/all
 
         public async Task<ActionResult<TimeSloteShortDto>> GetTimeSlotByDoctorId([FromRoute] int doctorId)
         {
