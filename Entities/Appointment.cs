@@ -8,14 +8,15 @@ namespace Hospital_Clinic_Appointment_System.Entities
     {
         [Key]
         public int Id { get; set; }
-
         //[Required]
         //[ForeignKey("doctor")]
         public int DoctorId { get; set; }
-
+        public Doctor doctor { get; set; }
         //[Required]
         //[ForeignKey("patient")]
         public int PatientId { get; set; }
+
+        public Patient patient { get; set; }
         public DateTime AppointmentDate { get; set; }
         public string Reason { get; set; }  
         public string Status { get; set; } // Scheduled .. Completed .. Cancelled .. No-Show
@@ -36,10 +37,9 @@ namespace Hospital_Clinic_Appointment_System.Entities
             set => UpdatedAt = value;
         }
 
-        // Relationship
+      
 
-        public Doctor doctor { get; set; }
-        public Patient patient { get; set; }
+       
     }
 
 }

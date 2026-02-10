@@ -1,5 +1,5 @@
 using Hospital_Clinic_Appointment_System.App_Context;
-
+using Hospital_Clinic_Appointment_System.CustomActionFilter;
 using Hospital_Clinic_Appointment_System.Repositories;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +7,13 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddRazorPages();
-builder.Services.AddControllers();
+//Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddControllers(options =>
+{
+    //  Apply ValidateModel in all controllers
+    options.Filters.Add<ValidateModelAttribute>();
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -57,9 +61,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-//app.MapStaticAssets();
-//app.MapRazorPages()
-//   .WithStaticAssets();
+app.MapStaticAssets();
+app.MapRazorPages()
+   .WithStaticAssets();
 
 
 

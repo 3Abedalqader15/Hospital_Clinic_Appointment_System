@@ -88,7 +88,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             return Ok(timeslot);
 
         }
-        [HttpGet("{patientId:int}/Doctor")] // Get : api/TimeSlot/patient/{patientId}
+        [HttpGet("{patientId:int}/Patent")] // Get : api/TimeSlot/patient/{patientId}
 
         public async Task<ActionResult<TimeSloteShortDto>> GetTimeSlotByPatientId([FromRoute] int patientId)
         {

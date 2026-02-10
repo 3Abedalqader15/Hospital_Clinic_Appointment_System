@@ -1,26 +1,25 @@
-﻿namespace Hospital_Clinic_Appointment_System.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Hospital_Clinic_Appointment_System.Models
 {
     public class UserDto
     {
-        public int Id { set; get; }
+        public int Id { get; set; }
 
-        public string Name { set; get; }
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
+        public string Name { get; set; }
 
-        public string Email { set; get; }
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
 
-        public string Password { set; get; }
+        [DataType(DataType.Password)]
+        public string? Password { get; set; }
 
-        public string Phone_Number { set; get; }
-
-        public DateTime BirthDay { set; get; }
-
-        public bool IsEmailConfirmed { set; get; }
-
-        public bool isActive { set; get; }
-
-        public DateTime Created_At { set; get; } = DateTime.UtcNow;
-
-        public DateTime Updated_At { set; get; } = DateTime.UtcNow;
+        [Phone(ErrorMessage = "Invalid phone number")]
+        [RegularExpression(@"^07[3-9][0-9]{8}$", ErrorMessage = "Invalid phone number")]
+        public string? Phone_Number { get; set; }
 
         public List<string> Roles { get; set; } = new List<string>();
     }

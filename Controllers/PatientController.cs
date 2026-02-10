@@ -25,9 +25,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             var patient = new Patient
             {
                 Id = createPatient.Id,
-                Name = createPatient.Name ,
-                Email = createPatient.Email ,
-                Phone_Number = createPatient.Phone_Number,
+                Name = createPatient.Name,
                 EmergencyNumber = createPatient.EmergencyNumber,
                 MedicalHistory = createPatient.MedicalHistory,
                 IsActive = createPatient.IsActive
@@ -41,11 +39,11 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             {
                 Id = patient.Id,
                 Name = patient.Name,
-                Email = patient.Email,
-                Phone_Number = patient.Phone_Number,
+                Email = patient.user?.Email,
+                Phone_Number = patient.user?.Phone_Number,
                 MedicalHistory = patient.MedicalHistory,
-                EmergencyNumber = patient.EmergencyNumber,
-                IsActive = patient.IsActive
+                EmergencyNumber = patient.EmergencyNumber
+                
 
 
 
@@ -221,8 +219,8 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 Email = patient.Email,
                 Phone_Number = patient.Phone_Number,
                 MedicalHistory = patient.MedicalHistory,
-                EmergencyNumber = patient.EmergencyNumber,
-                IsActive = patient.IsActive
+                EmergencyNumber = patient.EmergencyNumber
+                
             };
 
             return Ok(dto); // Return 200 OK with updated DTO

@@ -4,6 +4,7 @@ using Hospital_Clinic_Appointment_System.App_Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital_Clinic_Appointment_System.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20260210195749_Final")]
+    partial class Final
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -351,21 +354,6 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1000,
-                            BirthDay = new DateTime(2003, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Abood@Gmail.com",
-                            IsEmailConfirmed = true,
-                            Name = "AboodAlfaqeeh",
-                            Password = "123456789@Abcd",
-                            Phone_Number = "0779875103",
-                            UpdatedAt = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            isActive = true
-                        });
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.UserRole", b =>
@@ -381,13 +369,6 @@ namespace Hospital_Clinic_Appointment_System.Migrations
                     b.HasIndex("Role_Id");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            User_Id = 1000,
-                            Role_Id = 3
-                        });
                 });
 
             modelBuilder.Entity("Hospital_Clinic_Appointment_System.Entities.Appointment", b =>

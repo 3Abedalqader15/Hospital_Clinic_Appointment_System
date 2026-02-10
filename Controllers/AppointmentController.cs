@@ -26,8 +26,8 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 AppointmentDate = createAppointment.AppointmentDate,
                 Status = createAppointment.Status,
                 Reason = createAppointment.Reason,
-                Notes = createAppointment.Notes,
-                ReminderSent = createAppointment.ReminderSent,
+                Notes = createAppointment.Notes
+               
             };
 
             await appointmentRepository.AddAsync(appointment);
@@ -40,8 +40,8 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 AppointmentDate = appointment.AppointmentDate,
                 Status = appointment.Status,
                 Reason = appointment.Reason,
-                Notes = appointment.Notes,
-                ReminderSent = appointment.ReminderSent,
+                Notes = appointment.Notes
+                
             };
 
             // return with the actual appointment id
@@ -258,14 +258,19 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 return BadRequest(new { Message = "NewAppointmentDate is required." });
             }
 
-            var success = await appointmentRepository.RescheduleNewAppointmentAsync(appointmentId, request.NewAppointmentDate);
+
+
+            var success = await appointmentRepository.RescheduleNewAppointmentAsync(appointmentId, request.NewAppointmentDate); 
+
 
             if (!success)
             {
                 return NotFound(new { Message = "Appointment not found or couldn't reschedule." });
             }
+            
 
-			return Ok(new { Message = "Appointment rescheduled successfully.", NewDate = request.NewAppointmentDate });
+
+            return Ok(new { Message = "Appointment rescheduled successfully.", NewDate = request.NewAppointmentDate }); 
         }
 
 
