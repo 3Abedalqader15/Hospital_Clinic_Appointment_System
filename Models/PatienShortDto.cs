@@ -14,7 +14,7 @@ namespace Hospital_Clinic_Appointment_System.Models
         public string? Email { get; set; }
 
         [Phone(ErrorMessage = "Invalid phone number")]
-        [RegularExpression(@"^07[3-9][0-9]{8}$", ErrorMessage = "Phone number must start with 07")]
+        [RegularExpression(@"^07[3-9][0-9]{8}$",ErrorMessage = "Phone number must start with 07 and be 10 digits")]
         public string? Phone_Number { get; set; }
 
         [StringLength(1000, ErrorMessage = "Medical history is too long")]

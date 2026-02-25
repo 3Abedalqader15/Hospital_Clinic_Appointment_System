@@ -1,6 +1,7 @@
 ﻿using Hospital_Clinic_Appointment_System.Entities;
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class TimeSlotController : ControllerBase
     {
         private readonly ITimeSlotRepository timeSlotRepository;
@@ -17,6 +19,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
         }
 
         [HttpPost("Add")] // Post : api/TimeSlot/Add
+        [AllowAnonymous]
         public async Task<ActionResult<TimeSloteShortDto>> AddTimeSlotAsync(CreateTimeSlot addtimeSlot)
         {
             var timeslot = new TimeSlot
@@ -48,6 +51,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
         }
 
         [HttpGet("all")] // Get : api/TimeSlot/all
+        [Authorize(Policy = "DoctorOrAdmin")]
         public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetallAsync()
         {
             var timeslots = await timeSlotRepository.GetAllWithIncludesAsync();
@@ -71,7 +75,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
         }
 
         [HttpGet("{doctorId:int}/Doctor" , Name = "GetTimeByDoctorId")] // // Get : api/TimeSlot/all
-
+        [AllowAnonymous]
         public async Task<ActionResult<TimeSloteShortDto>> GetTimeSlotByDoctorId([FromRoute] int doctorId)
         {
             var timeslot = await timeSlotRepository.GetActiveTimeSlotsByDoctorIdAsync(doctorId);
@@ -89,7 +93,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
         }
         [HttpGet("{patientId:int}/Patent")] // Get : api/TimeSlot/patient/{patientId}
-
+        [AllowAnonymous]
         public async Task<ActionResult<TimeSloteShortDto>> GetTimeSlotByPatientId([FromRoute] int patientId)
         {
             var timeslot = await timeSlotRepository.GetTimeSlotsByDoctorAndDayAsync(patientId, DateTime.Today.DayOfWeek.ToString());
@@ -105,6 +109,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
         }
 
         [HttpDelete("{doctorId:int}/{dayOfWeek}")] // Delete : api/TimeSlot/{doctorId}/{dayOfWeek}
+        [AllowAnonymous]
         public async Task<ActionResult> DeleteTimeSlotsByDoctorAndDay([FromRoute] int doctorId, [FromRoute] string dayOfWeek)
         {
             var deletedCount = await timeSlotRepository.DeleteTimeSlotsByDoctorAndDayAsync(doctorId, dayOfWeek);
@@ -118,6 +123,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             }
         }
         [HttpPut("{id:int}")] // Put : api/TimeSlot/{id}
+        [AllowAnonymous]
         public async Task<ActionResult> UpdateTimeSlotAsync([FromRoute] int id, UpdateTimeSlot updateTimeSlot)
         {
             var existingTimeSlot = await timeSlotRepository.GetByIdAsync(id);
@@ -136,16 +142,21 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
         }
         [HttpGet("conflicts/{doctorId:int}/{dayOfWeek}/{startTime}/{endTime}")] // Get : api/TimeSlot/conflicts/{doctorId}/{dayOfWeek}/{startTime}/{endTime}
+        [AllowAnonymous]
         public async Task<ActionResult<bool>> CheckForConflictingTimeSlot([FromRoute] int doctorId, [FromRoute] string dayOfWeek, [FromRoute] TimeSpan startTime, [FromRoute] TimeSpan endTime, [FromQuery] int? excludeTimeSlotId = null) // Optional query parameter to exclude a specific time slot (useful for updates)
         {
+
             var hasConflict = await timeSlotRepository.HasConflictingTimeSlotAsync(doctorId, dayOfWeek, startTime, endTime, excludeTimeSlotId);
             if (hasConflict) 
             {
                 return Conflict("The specified time slot conflicts with an existing time slot for the doctor."); // Return 409 
             }
+
             return Ok(hasConflict); // Return 200 OK with the result
         }
+
         [HttpGet("doctor/{doctorId:int}/{dayOfWeek}")] // Get : api/TimeSlot/doctor/{doctorId}/{dayOfWeek}
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetTimeSlotsByDoctorAndDay([FromRoute] int doctorId, [FromRoute] string dayOfWeek)
         {
             var timeSlots = await timeSlotRepository.GetTimeSlotsByDoctorAndDayAsync(doctorId, dayOfWeek);
@@ -160,9 +171,11 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             return Ok(dto);
         }
         [HttpGet("active/{doctorId:int}")] // Get : api/TimeSlot/active/{doctorId}
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetActiveTimeSlotsByDoctorId([FromRoute] int doctorId)
         {
             var timeSlots = await timeSlotRepository.GetActiveTimeSlotsByDoctorIdAsync(doctorId);
+
             var dto = timeSlots.Select(t => new TimeSloteShortDto
             {
                 DayOfWeek = t.DayOfWeek,
@@ -171,9 +184,11 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 SlotDuration = t.SlotDuration,
                 IsActive = t.IsActive
             });
+
             return Ok(dto);
         }
         [HttpDelete("{id:int}")] // Delete : api/TimeSlot/{id}
+        [AllowAnonymous]
         public async Task<ActionResult> DeleteTimeSlotById([FromRoute] int id)
         {
             var existingTimeSlot = await timeSlotRepository.GetByIdAsync(id);

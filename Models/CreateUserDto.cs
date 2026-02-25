@@ -4,7 +4,7 @@ namespace Hospital_Clinic_Appointment_System.Models
 {
     public class CreateUserDto
     {
-        public int Id { set; get; }
+        
 
         [Required(ErrorMessage = "Name is required")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
@@ -27,7 +27,7 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         [Required(ErrorMessage = "Phone number is required")]
         [Phone(ErrorMessage = "Invalid phone number")]
-        [RegularExpression(@"^07[3-9][0-9]{8}$", ErrorMessage = "Phone number must start with 07 and contain 10 digits")]
+        [RegularExpression(@"^07[3-9][0-9]{7}$",ErrorMessage = "Phone number must start with 07 and be 10 digits")]
         [StringLength(10, MinimumLength = 10, ErrorMessage = "Phone number must be 10 digits")]
         public string Phone_Number { set; get; }
         [Required(ErrorMessage = "Birth date is required")]

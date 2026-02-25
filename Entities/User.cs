@@ -1,11 +1,13 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital_Clinic_Appointment_System.Entities
 {
     public class User : IAuditableEntity 
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { set; get; }
 
         

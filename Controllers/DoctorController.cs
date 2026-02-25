@@ -1,49 +1,61 @@
-﻿using Hospital_Clinic_Appointment_System.App_Context;
+﻿using Hospital_Clinic_Appointment_System.Entities;
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Clinic_Appointment_System.Controllers
 {
-    [Microsoft.AspNetCore.Mvc.Route("Dashboard/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class DoctorController : ControllerBase
     {
         private readonly IDoctorRepository doctorRepository;
-      
+
         public DoctorController(IDoctorRepository doctorRepository)
         {
             this.doctorRepository = doctorRepository;
-           
         }
 
-        // CRUD Operations and other methods From Generic Repository can be added here
-
-        // Post : Dashboard/Doctor/Add
-        [HttpPost("Add")]
-        public async Task<ActionResult<CreateDoctorDto>> AddDoctorAsync([FromBody] CreateDoctorDto createDoctorDto)
+        // GET: api/Doctor/All
+        [HttpGet("All")]
+        [AllowAnonymous] // Anyone can view doctors
+        public async Task<ActionResult<IEnumerable<DoctorListDto>>> GetAllDoctorsAsync()
         {
-            var doctor = new Entities.Doctor
+            var doctors = await doctorRepository.GetAllWithIncludesAsync(d => d.user);
+
+            var dtos = doctors.Select(d => new DoctorListDto
             {
-                User_Id = createDoctorDto.User_Id,
-                Name = createDoctorDto.Name,
-                Specialization = createDoctorDto.Specialization,
-                LicenseNumber = createDoctorDto.LicenseNumber,
-                ExperienceYears = createDoctorDto.ExperienceYears,
-                Bio = createDoctorDto.Bio,
-                profilePictureUrl = createDoctorDto.profilePictureUrl,
-                isActive = createDoctorDto.isActive
-            };
-            await doctorRepository.AddAsync(doctor);
-            await doctorRepository.SaveChangesAsync();
+                Id = d.Id,
+                Name = d.user?.Name ?? d.Name,
+                Specialization = d.Specialization,
+                ExperienceYears = d.ExperienceYears,
+                isActive = d.isActive,
+                Email = d.user?.Email ?? string.Empty,
+                Phone_Number = d.user?.Phone_Number ?? string.Empty
+            });
+
+            return Ok(dtos);
+        }
+
+        // GET: api/Doctor/{id}
+        [HttpGet("{id}")]
+        [AllowAnonymous] // Anyone can view doctor details
+        public async Task<ActionResult<DoctorDetailsDto>> GetDoctorByIdAsync(int id)
+        {
+            var doctor = await doctorRepository.FirstOrDefaultWithIncludesAsync(
+                d => d.Id == id,
+                d => d.user
+            );
+
+            if (doctor == null)
+                return NotFound();
+
             var dto = new DoctorDetailsDto
             {
                 Id = doctor.Id,
                 User_Id = doctor.User_Id,
-                Name = doctor.Name,
+                Name = doctor.user?.Name ?? doctor.Name,
                 Email = doctor.user?.Email ?? string.Empty,
                 Phone_Number = doctor.user?.Phone_Number ?? string.Empty,
                 Specialization = doctor.Specialization,
@@ -52,112 +64,59 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 Bio = doctor.Bio,
                 profilePictureUrl = doctor.profilePictureUrl,
                 IsActive = doctor.isActive
-
-
             };
 
-            return CreatedAtAction(nameof(GetDoctorByIdAsync), new { id = doctor.Id }, createDoctorDto); // Return 201 Created with the location of the new resource
+            return Ok(dto);
         }
 
-        // Get : Dashboard/Doctor/All
-        [HttpGet("All")]
-        public async Task<ActionResult<IEnumerable<DoctorListDto>>> GetAllDoctorsAsync()
+        // GET: api/Doctor/Active
+        [HttpGet("Active")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<DoctorListDto>>> GetActiveDoctorsAsync()
         {
-            var doctors = await doctorRepository.GetAllWithIncludesAsync(d => d.user);
+            var doctors = await doctorRepository.GetActiveDoctorsAsync();
 
-            var doctorDtos = doctors.Select(d => new DoctorListDto
+            var dtos = doctors.Select(d => new DoctorListDto
             {
                 Id = d.Id,
                 Name = d.user?.Name ?? d.Name,
                 Specialization = d.Specialization,
+                ExperienceYears = d.ExperienceYears,
                 isActive = d.isActive,
-                ExperienceYears =d.ExperienceYears,
                 Email = d.user?.Email ?? string.Empty,
                 Phone_Number = d.user?.Phone_Number ?? string.Empty
-            }).ToList();
+            });
 
-            return Ok(doctorDtos);
+            return Ok(dtos);
         }
 
-        // Get : Dashboard/Doctor/{DoctorId}
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<DoctorListDto>> GetDoctorByIdAsync([FromRoute]int id)
+        // GET: api/Doctor/Specialization/{specialization}
+        [HttpGet("Specialization/{specialization}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<DoctorListDto>>> GetDoctorsBySpecializationAsync(string specialization)
         {
-            var doctor = await doctorRepository.FirstOrDefaultWithIncludesAsync(d=>d.Id == id, d=>d.user);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
-            var doctorDto = new DoctorListDto
-            {
-                Id = doctor.Id,
-                Name = doctor.user?.Name?? doctor.Name,
-                Specialization = doctor.Specialization,
-                ExperienceYears = doctor.ExperienceYears,
-                isActive=doctor.isActive,
-                Email = doctor.user?.Email ?? string.Empty,
-                Phone_Number = doctor.user?.Phone_Number ?? string.Empty
-            };
-            return Ok(doctorDto);
-        }
+            var doctors = await doctorRepository.GetDoctorsBySpecializationAsync(specialization);
 
-
-
-        [HttpGet("Active")] // GET: Dashboard/Doctor/active
-        public async Task<ActionResult<DoctorListDto>> GetActiveDoctorsAsync()
-        {
-            var doctors = await doctorRepository.GetActiveDoctorsAsync();
-
-            var doctorDtos = doctors.Select(d => new DoctorListDto
+            var dtos = doctors.Select(d => new DoctorListDto
             {
                 Id = d.Id,
-                Name = d.user.Name?? d.Name ,
+                Name = d.user?.Name ?? d.Name,
                 Specialization = d.Specialization,
-                isActive=d.isActive,
+                ExperienceYears = d.ExperienceYears,
+                isActive = d.isActive,
                 Email = d.user?.Email ?? string.Empty,
                 Phone_Number = d.user?.Phone_Number ?? string.Empty
             });
 
-
-
-
-            return Ok(doctorDtos);
-
+            return Ok(dtos);
         }
 
-       
-
-       
-
-
-        [HttpGet("Specialization")] // Get :Dashboard/Doctor/Specialization
-
-        public async Task<ActionResult<DoctorDetailsDto>> GetDoctorsBySpecializationAsync(string specialization) 
+        // GET: api/Doctor/{id}/Appointments
+        [HttpGet("{id}/Appointments")]
+        [Authorize(Policy = "DoctorOrAdmin")]
+        public async Task<ActionResult<DoctorAppointmentShortDto>> GetDoctorWithAppointmentsAsync(int id)
         {
-
-            var Doctors = await doctorRepository.GetDoctorsBySpecializationAsync(specialization);
-
-
-            var DoctorDto = Doctors.Select(d => new DoctorDetailsDto
-            {
-                Name = d.Name ,
-                Specialization = d.Specialization
-
-            });
-
-
-            return Ok(DoctorDto);
-
-        }
-
-
-
-
-        // Get : Dashboard/Doctor/Appointments/{doctorId}
-        [HttpGet("Appointments/{doctorId:int}")]
-        public async Task<ActionResult<DoctorAppointmentShortDto?>> GetDoctorWithAppointmentsAsync(int doctorId)
-        {
-            var doctor = await doctorRepository.GetDoctorWithAppointmentsAsync(doctorId);
+            var doctor = await doctorRepository.GetDoctorWithAppointmentsAsync(id);
 
             if (doctor == null)
                 return NotFound();
@@ -188,20 +147,15 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             return Ok(dto);
         }
 
-
-
-
-        // Get : Dashboard/Doctor/TimeSlote/{doctorId}
-
-        [HttpGet("TimeSlot/{doctorId:int}")]
-        public async Task<ActionResult<DoctorDetailsDto?>> GetDoctorWithTimeSlotsAsync([FromRoute] int doctorId)
+        // GET: api/Doctor/{id}/TimeSlots
+        [HttpGet("{id}/TimeSlots")]
+        [AllowAnonymous]
+        public async Task<ActionResult<DoctorDetailsDto>> GetDoctorWithTimeSlotsAsync(int id)
         {
-            var doctor = await doctorRepository.GetDoctorWithTimeSlotsAsync(doctorId);
+            var doctor = await doctorRepository.GetDoctorWithTimeSlotsAsync(id);
 
             if (doctor == null)
-            {
-                return NotFound($"Doctor with ID {doctorId} not found");
-            }
+                return NotFound();
 
             var dto = new DoctorDetailsDto
             {
@@ -228,200 +182,111 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             return Ok(dto);
         }
 
-
-        // Get : Dashboard/Doctor/Availability/{doctorId}
-
-        [HttpGet("Availability/{doctorId:int}")]
-        public async Task<ActionResult<bool>> IsDoctorAvailableAsync(int doctorId, DateTime appointmentDate)
+        // GET: api/Doctor/{id}/Available
+        [HttpGet("{id}/Available")]
+        [AllowAnonymous]
+        public async Task<ActionResult<bool>> CheckDoctorAvailabilityAsync(int id, [FromQuery] DateTime appointmentDate)
         {
-            var isAvailable = await doctorRepository.IsDoctorAvailableAsync(doctorId, appointmentDate);
-
-            return Ok(isAvailable);
+            var isAvailable = await doctorRepository.IsDoctorAvailableAsync(id, appointmentDate);
+            return Ok(new { IsAvailable = isAvailable });
         }
 
-
-        //Put : Dashboard/Doctor/{id}/Update
-        [HttpPut("{id:int}/Update")]  
-        public async Task<ActionResult> UpdateDoctorAsync([FromRoute] int id, [FromBody] updateDoctorDto updateDoctorDto)
+        // POST: api/Doctor/Add
+        [HttpPost("Add")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<ActionResult<DoctorDetailsDto>> AddDoctorAsync([FromBody] CreateDoctorDto createDto)
         {
-            // Validate ID
-            if (id <= 0)
+            var doctor = new Doctor
             {
-                return BadRequest("Invalid doctor ID");
-            }
+                User_Id = createDto.User_Id,
+                Name = createDto.Name,
+                Specialization = createDto.Specialization,
+                LicenseNumber = createDto.LicenseNumber,
+                ExperienceYears = createDto.ExperienceYears,
+                Bio = createDto.Bio,
+                profilePictureUrl = createDto.profilePictureUrl,
+                isActive = createDto.isActive
+            };
 
-            // Validate DTO
-            if (updateDoctorDto == null)
+            await doctorRepository.AddAsync(doctor);
+            await doctorRepository.SaveChangesAsync();
+
+            var dto = new DoctorDetailsDto
             {
-                return BadRequest("Doctor data is required");
-            }
+                Id = doctor.Id,
+                User_Id = doctor.User_Id,
+                Name = doctor.Name,
+                Specialization = doctor.Specialization,
+                LicenseNumber = doctor.LicenseNumber,
+                ExperienceYears = doctor.ExperienceYears,
+                Bio = doctor.Bio,
+                profilePictureUrl = doctor.profilePictureUrl,
+                IsActive = doctor.isActive
+            };
 
-            try
-            {
-                var existingDoctor = await doctorRepository.GetByIdAsync(id);
-
-                if (existingDoctor == null)
-                {
-                    return NotFound($"Doctor with ID {id} not found");
-                }
-
-
-               
-                if (!string.IsNullOrWhiteSpace(updateDoctorDto.Name))
-                    existingDoctor.Name = updateDoctorDto.Name;
-
-                if (!string.IsNullOrWhiteSpace(updateDoctorDto.Specialization))
-                    existingDoctor.Specialization = updateDoctorDto.Specialization;
-
-                if (!string.IsNullOrWhiteSpace(updateDoctorDto.LicenseNumber))
-                    existingDoctor.LicenseNumber = updateDoctorDto.LicenseNumber;
-
-                if (updateDoctorDto.ExperienceYears > 0)
-                    existingDoctor.ExperienceYears = updateDoctorDto.ExperienceYears;
-
-                if (!string.IsNullOrWhiteSpace(updateDoctorDto.Bio))
-                    existingDoctor.Bio = updateDoctorDto.Bio;
-
-                if (!string.IsNullOrWhiteSpace(updateDoctorDto.profilePictureUrl))
-                    existingDoctor.profilePictureUrl = updateDoctorDto.profilePictureUrl;
-
-                existingDoctor.isActive = updateDoctorDto.isActive;
-
-                
-                doctorRepository.Update(existingDoctor);
-                await doctorRepository.SaveChangesAsync();
-
-                // Fetch updated doctor with includes
-                var updatedDoctor = await doctorRepository.FirstOrDefaultWithIncludesAsync(
-                    d => d.Id == id,
-                    d => d.user
-                );
-
-                if (updatedDoctor == null) 
-                {
-                    return NotFound($"Doctor with ID {id} not found after update");
-                }
-
-                var dto = new DoctorDetailsDto
-                {
-                    Id = updatedDoctor.Id,
-                    User_Id = updatedDoctor.User_Id,
-                    Name = updatedDoctor.Name,
-                    Email = updatedDoctor.user?.Email ?? string.Empty,
-                    Phone_Number = updatedDoctor.user?.Phone_Number ?? string.Empty,
-                    Specialization = updatedDoctor.Specialization,
-                    LicenseNumber = updatedDoctor.LicenseNumber,
-                    ExperienceYears = updatedDoctor.ExperienceYears,
-                    Bio = updatedDoctor.Bio,
-                    profilePictureUrl = updatedDoctor.profilePictureUrl,
-                    IsActive = updatedDoctor.isActive
-                };
-
-                return Ok(new
-                {
-                    message = $"Doctor with ID {id} updated successfully",
-                    data = dto
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Error updating doctor",
-                    details = ex.Message
-                });
-            }
-        }
-        // Delete : Dashboard/Doctor/{id}/Delete 
-        [HttpDelete("{id:int}/Delete")]  
-        public async Task<ActionResult> DeleteDoctorAsync([FromRoute] int id)
-        {
-            // Validate ID
-            if (id <= 0)
-            {
-                return BadRequest("Invalid doctor ID");
-            }
-
-            var existingDoctor = await doctorRepository.GetByIdAsync(id);
-            if (existingDoctor == null)
-            {
-                return NotFound($"Doctor with ID {id} not found");
-            }
-
-            try
-            {
-                // Check for related appointments before deletion
-                var doctorWithAppointments = await doctorRepository.GetDoctorWithAppointmentsAsync(id);
-                if (doctorWithAppointments?.Appointments?.Any() == true)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Cannot delete doctor with existing appointments",
-                        appointmentCount = doctorWithAppointments.Appointments.Count
-                    });
-                }
-
-                // Check for time slots
-                var doctorWithTimeSlots = await doctorRepository.GetDoctorWithTimeSlotsAsync(id);
-                if (doctorWithTimeSlots?.TimeSlots?.Any() == true)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Cannot delete doctor with existing time slots",
-                        timeSlotCount = doctorWithTimeSlots.TimeSlots.Count
-                    });
-                }
-
-                doctorRepository.Delete(existingDoctor);
-                await doctorRepository.SaveChangesAsync();
-
-                return Ok(new { message = $"Doctor with ID {id} deleted successfully" });
-            }
-            catch (DbUpdateException dbEx)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Database error while deleting doctor",
-                    details = dbEx.InnerException?.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Error deleting doctor",
-                    details = ex.Message
-                });
-            }
+            return CreatedAtAction(nameof(GetDoctorByIdAsync), new { id = doctor.Id }, dto);
         }
 
+        // PUT: api/Doctor/{id}
+        [HttpPut("{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> UpdateDoctorAsync(int id, [FromBody] updateDoctorDto updateDto)
+        {
+            var doctor = await doctorRepository.GetByIdAsync(id);
+            if (doctor == null)
+                return NotFound();
 
+            // Update only provided fields
+            if (!string.IsNullOrWhiteSpace(updateDto.Name))
+                doctor.Name = updateDto.Name;
 
+            if (!string.IsNullOrWhiteSpace(updateDto.Specialization))
+                doctor.Specialization = updateDto.Specialization;
 
+            if (!string.IsNullOrWhiteSpace(updateDto.LicenseNumber))
+                doctor.LicenseNumber = updateDto.LicenseNumber;
 
+            if (updateDto.ExperienceYears > 0)
+                doctor.ExperienceYears = updateDto.ExperienceYears;
 
+            if (!string.IsNullOrWhiteSpace(updateDto.Bio))
+                doctor.Bio = updateDto.Bio;
 
+            if (!string.IsNullOrWhiteSpace(updateDto.profilePictureUrl))
+                doctor.profilePictureUrl = updateDto.profilePictureUrl;
 
+            doctor.isActive = updateDto.isActive;
 
+            doctorRepository.Update(doctor);
+            await doctorRepository.SaveChangesAsync();
 
+            return NoContent();
+        }
 
+        // DELETE: api/Doctor/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> DeleteDoctorAsync(int id)
+        {
+            var doctor = await doctorRepository.GetByIdAsync(id);
+            if (doctor == null)
+                return NotFound();
 
+            // Check for appointments
+            var doctorWithAppointments = await doctorRepository.GetDoctorWithAppointmentsAsync(id);
+            if (doctorWithAppointments?.Appointments?.Any() == true)
+            {
+                return BadRequest(new
+                {
+                    Message = "Cannot delete doctor with existing appointments",
+                    AppointmentCount = doctorWithAppointments.Appointments.Count
+                });
+            }
 
+            doctorRepository.Delete(doctor);
+            await doctorRepository.SaveChangesAsync();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            return NoContent();
+        }
     }
 }

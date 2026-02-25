@@ -52,8 +52,13 @@ namespace Hospital_Clinic_Appointment_System.App_Context
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.Id)
+                      .ValueGeneratedOnAdd(); 
+            });
 
-            
             modelBuilder.Entity<Doctor>()
                 .HasOne(d => d.user)
                 .WithOne(u => u.Doctor)
