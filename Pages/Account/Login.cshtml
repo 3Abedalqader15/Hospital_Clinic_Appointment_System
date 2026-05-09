@@ -1,0 +1,54 @@
+@page
+@model Hospital_Clinic_Appointment_System.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-sign-in-alt me-2 text-primary"></i>Sign In</h4>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+                {
+                    <div class="alert alert-danger">@Model.ErrorMessage</div>
+                }
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Login.Email" class="form-label"></label>
+                        <input asp-for="Login.Email" class="form-control" />
+                        <span asp-validation-for="Login.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Login.Password" class="form-label"></label>
+                        <input asp-for="Login.Password" class="form-control" />
+                        <span asp-validation-for="Login.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input asp-for="Login.RememberMe" class="form-check-input" />
+                        <label asp-for="Login.RememberMe" class="form-check-label">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-lock me-2"></i>Login
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer text-center bg-light">
+                <span class="text-muted">No account yet?</span>
+                <a asp-page="/Account/Register" class="fw-bold ms-1">Create one</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
