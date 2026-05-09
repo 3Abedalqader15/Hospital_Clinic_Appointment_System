@@ -100,7 +100,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
         // PUT: api/User/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] CreateUserDto updateDto)
+        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UpdateUserDto updateDto)
         {
             var user = await userRepository.GetByIdAsync(id);
             if (user == null)

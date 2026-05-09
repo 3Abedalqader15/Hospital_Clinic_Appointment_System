@@ -1,0 +1,128 @@
+@page
+@model Hospital_Clinic_Appointment_System.Pages.Admin.TimeSlotsModel
+@{
+    ViewData["Title"] = "Manage Time Slots";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0"><i class="fas fa-clock me-2 text-primary"></i>Time Slots</h2>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+<div class="card border-0 mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Add Time Slot</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Create" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Doctor</label>
+                <select class="form-select" name="CreateTimeSlot.DoctorId" required>
+                    <option value="">Select doctor</option>
+                    @foreach (var doctor in Model.Doctors)
+                    {
+                        <option value="@doctor.Id">@doctor.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Day of Week</label>
+                <select class="form-select" name="CreateTimeSlot.DayOfWeek" required>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Start</label>
+                <input class="form-control" type="time" name="CreateTimeSlot.StartTime" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">End</label>
+                <input class="form-control" type="time" name="CreateTimeSlot.EndTime" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Duration (min)</label>
+                <input class="form-control" type="number" name="CreateTimeSlot.SlotDuration" min="15" />
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="CreateTimeSlot.IsActive" value="true" checked />
+                    <label class="form-check-label">Active</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Add Time Slot</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Doctor</th>
+                    <th>Day</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var slot in Model.TimeSlots)
+                {
+                    <tr>
+                        <td>@slot.Id</td>
+                        <td>@slot.DoctorId</td>
+                        <td>@slot.DayOfWeek</td>
+                        <td>@slot.StartTime.ToString(@"hh\:mm")</td>
+                        <td>@slot.EndTime.ToString(@"hh\:mm")</td>
+                        <td>@slot.SlotDuration min</td>
+                        <td>@(slot.IsActive ? "Active" : "Inactive")</td>
+                        <td class="text-end">
+                            <form method="post" asp-page-handler="Update" class="d-inline-flex flex-wrap gap-2 align-items-center justify-content-end">
+                                <input type="hidden" name="UpdateTimeSlotId" value="@slot.Id" />
+                                <input class="form-control form-control-sm" name="UpdateTimeSlot.DayOfWeek" value="@slot.DayOfWeek" />
+                                <input class="form-control form-control-sm" type="time" name="UpdateTimeSlot.StartTime" value="@slot.StartTime.ToString(@"hh\:mm")" />
+                                <input class="form-control form-control-sm" type="time" name="UpdateTimeSlot.EndTime" value="@slot.EndTime.ToString(@"hh\:mm")" />
+                                <input class="form-control form-control-sm" type="number" name="UpdateTimeSlot.SlotDuration" value="@slot.SlotDuration" />
+                                <input type="hidden" name="UpdateTimeSlot.IsActive" value="false" />
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="UpdateTimeSlot.IsActive" value="true" @(slot.IsActive ? "checked" : "") />
+                                    <label class="form-check-label">Active</label>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                            </form>
+                            <form method="post" asp-page-handler="Delete" class="d-inline">
+                                <input type="hidden" name="DeleteTimeSlotId" value="@slot.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.TimeSlots.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">No time slots found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

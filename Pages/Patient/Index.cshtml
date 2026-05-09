@@ -1,0 +1,65 @@
+@page
+@model Hospital_Clinic_Appointment_System.Pages.Patient.IndexModel
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-warning">@Model.ErrorMessage</div>
+}
+
+<div class="card border-0 mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-user-injured me-2"></i>Profile</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-2"><strong>Name:</strong> @Model.Patient?.Name</p>
+                <p class="mb-2"><strong>Email:</strong> @Model.Patient?.Email</p>
+                <p class="mb-2"><strong>Phone:</strong> @Model.Patient?.Phone_Number</p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-2"><strong>Emergency:</strong> @Model.Patient?.EmergencyNumber</p>
+                <p class="mb-2"><strong>Medical History:</strong> @Model.Patient?.MedicalHistory</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Upcoming Appointments</h5>
+        <a asp-page="/Patient/Appointments" class="btn btn-sm btn-outline-primary">Manage</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model.Appointments)
+                {
+                    <tr>
+                        <td>@appointment.Id</td>
+                        <td>@appointment.DoctorName</td>
+                        <td>@appointment.AppointmentDate.ToString("g")</td>
+                        <td>@appointment.Status</td>
+                    </tr>
+                }
+                @if (!Model.Appointments.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No appointments scheduled.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

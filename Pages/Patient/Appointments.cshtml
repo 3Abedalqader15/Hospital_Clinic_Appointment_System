@@ -1,0 +1,64 @@
+@page
+@model Hospital_Clinic_Appointment_System.Pages.Patient.AppointmentsModel
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0"><i class="fas fa-calendar-check me-2 text-primary"></i>My Appointments</h2>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+<div class="card border-0">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model.Appointments)
+                {
+                    <tr>
+                        <td>@appointment.Id</td>
+                        <td>@appointment.DoctorName</td>
+                        <td>@appointment.AppointmentDate.ToString("g")</td>
+                        <td>@appointment.Status</td>
+                        <td class="text-end">
+                            <div class="d-flex flex-column gap-2 align-items-end">
+                                <form method="post" asp-page-handler="Reschedule" class="d-flex gap-2 align-items-center">
+                                    <input type="hidden" name="appointmentId" value="@appointment.Id" />
+                                    <input type="datetime-local" name="newAppointmentDate" class="form-control form-control-sm" />
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">Reschedule</button>
+                                </form>
+                                <form method="post" asp-page-handler="Cancel">
+                                    <input type="hidden" name="appointmentId" value="@appointment.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-warning">Cancel</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Appointments.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No appointments found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

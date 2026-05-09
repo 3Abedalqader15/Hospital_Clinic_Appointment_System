@@ -285,8 +285,8 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             if (!string.IsNullOrWhiteSpace(updateDto.LicenseNumber))
                 doctor.LicenseNumber = updateDto.LicenseNumber;
 
-            if (updateDto.ExperienceYears > 0)
-                doctor.ExperienceYears = updateDto.ExperienceYears;
+            if (updateDto.ExperienceYears.HasValue)
+                doctor.ExperienceYears = updateDto.ExperienceYears.Value;
 
             if (!string.IsNullOrWhiteSpace(updateDto.Bio))
                 doctor.Bio = updateDto.Bio;
@@ -294,7 +294,10 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             if (!string.IsNullOrWhiteSpace(updateDto.profilePictureUrl))
                 doctor.profilePictureUrl = updateDto.profilePictureUrl;
 
-            doctor.isActive = updateDto.isActive;
+            if (updateDto.isActive.HasValue)
+            {
+                doctor.isActive = updateDto.isActive.Value;
+            }
 
             doctorRepository.Update(doctor);
             await doctorRepository.SaveChangesAsync();
