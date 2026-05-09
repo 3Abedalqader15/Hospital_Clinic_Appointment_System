@@ -17,6 +17,8 @@ namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 
         Task<IEnumerable<Appointment>> GetThisWeekAppointmentsAsync();
 
+        Task<IEnumerable<Appointment>> GetAllAppointmentsWithDetailsAsync();
+
         Task<bool> CancelAppointmentAsync(int appointmentId);
 
         Task<bool> CompleteAppointmentAsync(int appointmentId, string? notes = null);

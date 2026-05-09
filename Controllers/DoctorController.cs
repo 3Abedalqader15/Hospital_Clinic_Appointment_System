@@ -3,6 +3,7 @@ using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Hospital_Clinic_Appointment_System.Controllers
 {
@@ -132,6 +133,8 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 Appointments = doctor.Appointments?.Select(a => new AppointmentShortDto
                 {
                     Id = a.Id,
+                    DoctorId = doctor.Id,
+                    DoctorName = doctor.user?.Name ?? doctor.Name,
                     AppointmentDate = a.AppointmentDate,
                     Status = a.Status,
                     Patient = a.patient == null ? null : new PatientShortDto
@@ -172,6 +175,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 IsActive = doctor.isActive,
                 TimeSlots = doctor.TimeSlots?.Select(t => new TimeSloteShortDto
                 {
+                    Id = t.Id,
                     DayOfWeek = t.DayOfWeek,
                     StartTime = t.StartTime,
                     EndTime = t.EndTime,
@@ -189,6 +193,41 @@ namespace Hospital_Clinic_Appointment_System.Controllers
         {
             var isAvailable = await doctorRepository.IsDoctorAvailableAsync(id, appointmentDate);
             return Ok(new { IsAvailable = isAvailable });
+        }
+
+        // GET: api/Doctor/Me
+        [HttpGet("Me")]
+        [Authorize(Policy = "DoctorOrAdmin")]
+        public async Task<ActionResult<DoctorDetailsDto>> GetCurrentDoctorAsync()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized(new { Message = "Missing or invalid user identifier." });
+            }
+
+            var doctor = await doctorRepository.GetDoctorByUserIdAsync(userId);
+            if (doctor == null)
+            {
+                return NotFound(new { Message = "Doctor profile not found." });
+            }
+
+            var dto = new DoctorDetailsDto
+            {
+                Id = doctor.Id,
+                User_Id = doctor.User_Id,
+                Name = doctor.user?.Name ?? doctor.Name,
+                Email = doctor.user?.Email ?? string.Empty,
+                Phone_Number = doctor.user?.Phone_Number ?? string.Empty,
+                Specialization = doctor.Specialization,
+                LicenseNumber = doctor.LicenseNumber,
+                ExperienceYears = doctor.ExperienceYears,
+                Bio = doctor.Bio,
+                profilePictureUrl = doctor.profilePictureUrl,
+                IsActive = doctor.isActive
+            };
+
+            return Ok(dto);
         }
 
         // POST: api/Doctor/Add

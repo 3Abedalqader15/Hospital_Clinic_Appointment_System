@@ -3,6 +3,7 @@ using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Hospital_Clinic_Appointment_System.Controllers
 {
@@ -98,6 +99,36 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 return Ok(new List<AppointmentShortDto>());
 
             return Ok(appointments);
+        }
+
+        // GET: api/Patient/Me
+        [HttpGet("Me")]
+        [Authorize(Policy = "PatientOrAdmin")]
+        public async Task<ActionResult<PatientShortDto>> GetCurrentPatientAsync()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized(new { Message = "Missing or invalid user identifier." });
+            }
+
+            var patient = await patientRepository.GetPatientByUserIdAsync(userId);
+            if (patient == null)
+            {
+                return NotFound(new { Message = "Patient profile not found." });
+            }
+
+            var dto = new PatientShortDto
+            {
+                Id = patient.Id,
+                Name = patient.user?.Name ?? patient.Name,
+                Email = patient.user?.Email,
+                Phone_Number = patient.user?.Phone_Number,
+                MedicalHistory = patient.MedicalHistory,
+                EmergencyNumber = patient.EmergencyNumber
+            };
+
+            return Ok(dto);
         }
 
         // POST: api/Patient/Add
