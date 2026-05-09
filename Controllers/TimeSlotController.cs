@@ -78,7 +78,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
         [HttpGet("{doctorId:int}/Doctor" , Name = "GetTimeByDoctorId")] // // Get : api/TimeSlot/all
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetTimeSlotByDoctorId([FromRoute] int doctorId)
+        public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetTimeSlotsByDoctorId([FromRoute] int doctorId)
         {
             var timeslot = await timeSlotRepository.GetActiveTimeSlotsByDoctorIdAsync(doctorId);
 
@@ -97,7 +97,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
         }
         [HttpGet("{patientId:int}/Patent")] // Get : api/TimeSlot/patient/{patientId}
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetTimeSlotByPatientId([FromRoute] int patientId)
+        public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetTimeSlotsByPatientId([FromRoute] int patientId)
         {
             var timeslot = await timeSlotRepository.GetTimeSlotsByDoctorAndDayAsync(patientId, DateTime.Today.DayOfWeek.ToString());
             var dto = timeslot.Select(t => new TimeSloteShortDto
