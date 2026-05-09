@@ -50,6 +50,21 @@ builder.Services.AddSwaggerGen();
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
+            options.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = ctx =>
+                {
+                    // Log ctx.Exception.Message somewhere (ILogger) for debugging
+                    Console.WriteLine("JWT auth failed: " + ctx.Exception?.Message);
+                    return Task.CompletedTask;
+                },
+                OnMessageReceived = ctx =>
+                {
+                    // Optionally inspect the raw Authorization header
+                    Console.WriteLine("Auth header: " + ctx.Request.Headers["Authorization"].ToString());
+                    return Task.CompletedTask;
+                }
+            };
         });
 
     //  Session

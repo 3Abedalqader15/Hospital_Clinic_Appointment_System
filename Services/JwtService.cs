@@ -33,14 +33,14 @@ namespace Hospital_Clinic_Appointment_System.Services
             }
 
             var key = new SymmetricSecurityKey( 
-                Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)  // Ensure the key is not null and is properly configured
+                Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)  //  ensure ( not null)
                 );
 
             var creds = new SigningCredentials(
-                key, SecurityAlgorithms.HmacSha256 // Use HMAC SHA256 for signing the token
+                key, SecurityAlgorithms.HmacSha256 
                 );
 
-            var token = new JwtSecurityToken( // Create the JWT token with the specified parameters
+            var token = new JwtSecurityToken( //  specified parameters
 
                 issuer: configuration["Jwt:Issuer"],
                 audience: configuration["Jwt:Audience"],
@@ -90,7 +90,7 @@ namespace Hospital_Clinic_Appointment_System.Services
             }
             catch
             {
-                return null; // Token invalid
+                return null; //  invalid  الله يبعدنا 
             }
 
 

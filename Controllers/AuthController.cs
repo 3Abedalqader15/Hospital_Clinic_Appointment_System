@@ -155,10 +155,13 @@ public class AuthController : ControllerBase
 
     // GET: api/Auth/Me
     [HttpGet("Me")]
-    [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult<AuthResponseDto>> GetCurrentUser()
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            return Unauthorized(new { Message = "Missing or invalid user identifier." });
+
         var user = await authRepository.GetUserWithRolesAsync(userId);
 
         if (user == null)
@@ -184,7 +187,11 @@ public class AuthController : ControllerBase
     [Authorize] 
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+if (userIdClaim == null || !int.TryParse(userIdClaim, out var userId))
+{
+    return Unauthorized(new { Message = "Invalid or missing user identifier." });
+}
 
         // Validate FIRST
         if (dto.NewPassword == dto.CurrentPassword)
