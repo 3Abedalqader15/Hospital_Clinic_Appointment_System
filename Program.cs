@@ -26,6 +26,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 
 
 
@@ -95,6 +97,7 @@ builder.Services.AddSwaggerGen();
     builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
     builder.Services.AddScoped<IAuthRepository, AuthRepository>();
     builder.Services.AddScoped<IJwtService, JwtService>();
+    builder.Services.AddScoped<IApiClient, ApiClient>();
 
 
 
@@ -147,4 +150,3 @@ builder.Services.AddSwaggerGen();
     }
 
     app.Run();
-

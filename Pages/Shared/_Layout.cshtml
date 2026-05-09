@@ -23,6 +23,15 @@
     <link rel="stylesheet" href="~/Hospital_Clinic_Appointment_System.styles.css" asp-append-version="true" />
 </head>
 <body class="mediClinic-body">
+    @{
+        var userInfo = Context.Session.GetObject<UserInfoDto>(SessionKeys.UserInfo);
+        var isAuthenticated = !string.IsNullOrWhiteSpace(Context.Session.GetString(SessionKeys.AuthToken));
+        var roles = userInfo?.Roles ?? new List<string>();
+        var isAdmin = roles.Any(role => string.Equals(role, "Admin", StringComparison.OrdinalIgnoreCase));
+        var isDoctor = roles.Any(role => string.Equals(role, "Doctor", StringComparison.OrdinalIgnoreCase));
+        var isPatient = roles.Any(role => string.Equals(role, "Patient", StringComparison.OrdinalIgnoreCase));
+        var dashboardPage = isAdmin ? "/Admin/Index" : isDoctor ? "/Doctor/Index" : isPatient ? "/Patient/Index" : "/Index";
+    }
     <!-- Navigation Bar -->
     <header class="mediClinic-header">
         <nav class="navbar navbar-expand-lg navbar-dark mediClinic-navbar sticky-top">
@@ -47,17 +56,93 @@
 
                 <!-- Navigation Menu -->
                 <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
                         <li class="nav-item">
                             <a class="nav-link mediClinic-nav-link" asp-area="" asp-page="/Index">
                                 <i class="fas fa-home me-2"></i>Home
                             </a>
                         </li>
+                        @if (isAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link mediClinic-nav-link" asp-page="@dashboardPage">
+                                    <i class="fas fa-chart-line me-2"></i>Dashboard
+                                </a>
+                            </li>
+                        }
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link mediClinic-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-tools me-2"></i>Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-page="/Admin/Index">Overview</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Users">Users</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Doctors">Doctors</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Patients">Patients</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Appointments">Appointments</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/TimeSlots">Time Slots</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (isDoctor)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link mediClinic-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-md me-2"></i>Doctor
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-page="/Doctor/Index">Overview</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Doctor/Appointments">Appointments</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Doctor/TimeSlots">Time Slots</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (isPatient)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link mediClinic-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-injured me-2"></i>Patient
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-page="/Patient/Index">Overview</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Patient/Doctors">Doctors</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Patient/Appointments">Appointments</a></li>
+                                </ul>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link mediClinic-nav-link" asp-area="" asp-page="/Privacy">
                                 <i class="fas fa-shield-alt me-2"></i>Privacy
                             </a>
                         </li>
+                        @if (!isAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link mediClinic-nav-link" asp-page="/Account/Login">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mediClinic-nav-link" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus me-2"></i>Register
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item d-flex align-items-center text-white px-3">
+                                <i class="fas fa-user-circle me-2"></i>@(userInfo?.Name ?? "User")
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" asp-page="/Account/Logout" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-light">
+                                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

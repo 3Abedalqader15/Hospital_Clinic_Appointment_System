@@ -13,6 +13,7 @@ namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 
         Task<Doctor?> GetDoctorWithTimeSlotsAsync(int doctorId);        
 
+        Task<Doctor?> GetDoctorByUserIdAsync(int userId);
 
         Task<bool> IsDoctorAvailableAsync(int doctorId, DateTime appointmentDate);
 

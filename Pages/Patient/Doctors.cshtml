@@ -1,0 +1,76 @@
+@page
+@model Hospital_Clinic_Appointment_System.Pages.Patient.DoctorsModel
+@{
+    ViewData["Title"] = "Browse Doctors";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0"><i class="fas fa-user-md me-2 text-primary"></i>Doctors</h2>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+<div class="card border-0 mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Book Appointment</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Book" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Doctor</label>
+                <select class="form-select" name="CreateAppointment.DoctorId" required>
+                    <option value="">Select doctor</option>
+                    @foreach (var doctor in Model.Doctors)
+                    {
+                        <option value="@doctor.Id">@doctor.Name (@doctor.Specialization)</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Appointment Date</label>
+                <input class="form-control" type="datetime-local" name="CreateAppointment.AppointmentDate" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Reason</label>
+                <input class="form-control" name="CreateAppointment.Reason" />
+            </div>
+            <div class="col-12">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" name="CreateAppointment.Notes" rows="2"></textarea>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Book Appointment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-4">
+    @foreach (var doctor in Model.Doctors)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <h5 class="card-title">@doctor.Name</h5>
+                    <p class="card-text text-muted mb-2">@doctor.Specialization</p>
+                    <p class="card-text small text-muted">Experience: @doctor.ExperienceYears years</p>
+                    <p class="card-text small text-muted">Email: @doctor.Email</p>
+                    <p class="card-text small text-muted">Phone: @doctor.Phone_Number</p>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Doctors.Any())
+    {
+        <div class="col-12">
+            <div class="alert alert-info">No doctors available at this time.</div>
+        </div>
+    }
+</div>

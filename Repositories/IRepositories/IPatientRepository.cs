@@ -9,6 +9,8 @@ namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
 
         Task<Patient?> GetMedicalHistoryByPatientIdAsync(int patientId);
 
+        Task<Patient?> GetPatientByUserIdAsync(int userId);
+
 
 
 
