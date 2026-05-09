@@ -1,10 +1,346 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Dashboard - MediClinic";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero Section -->
+<section class="py-5 mb-5 animate-fadeIn">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <div class="mb-4">
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-3">
+                    <i class="fas fa-star me-2"></i>Welcome to MediClinic
+                </span>
+            </div>
+            <h1 class="display-4 fw-bold mb-4">
+                Healthcare Management <span style="background: linear-gradient(135deg, #0066cc 0%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Made Simple</span>
+            </h1>
+            <p class="lead text-secondary mb-4 fs-5">
+                Revolutionize your clinic operations with our comprehensive appointment management system. 
+                Streamline scheduling, patient management, and healthcare delivery in one elegant platform.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                <button class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                </button>
+                <button class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-arrow-right me-2"></i>Explore Features
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-5 text-center d-none d-lg-block">
+            <div style="position: relative; height: 400px; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; width: 300px; height: 300px; background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 212, 255, 0.1)); border-radius: 50%; filter: blur(40px);"></div>
+                <i class="fas fa-calendar-check" style="font-size: 8rem; color: var(--primary); opacity: 0.15; position: relative; z-index: 1;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="mb-5">
+    <h2 class="mb-4 fw-bold">
+        <i class="fas fa-chart-line text-primary me-2"></i>Dashboard Overview
+    </h2>
+    <div class="row g-4">
+        <!-- Total Patients Stat -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon-box bg-primary bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-users text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="stat-number fs-3 fw-bold text-primary mb-2">1,234</div>
+                    <div class="stat-label text-secondary">Total Patients</div>
+                    <small class="text-success">
+                        <i class="fas fa-arrow-up"></i> +12% this month
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduled Appointments Stat -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon-box bg-info bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-calendar-alt text-info" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="stat-number fs-3 fw-bold text-info mb-2">456</div>
+                    <div class="stat-label text-secondary">Scheduled Appointments</div>
+                    <small class="text-success">
+                        <i class="fas fa-arrow-up"></i> +8% this week
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Visits Stat -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon-box bg-success bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-check-circle text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="stat-number fs-3 fw-bold text-success mb-2">2,089</div>
+                    <div class="stat-label text-secondary">Completed Visits</div>
+                    <small class="text-success">
+                        <i class="fas fa-arrow-up"></i> +15% this month
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Confirmations Stat -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon-box bg-warning bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-clock text-warning" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="stat-number fs-3 fw-bold text-warning mb-2">78</div>
+                    <div class="stat-label text-secondary">Pending Confirmations</div>
+                    <small class="text-danger">
+                        <i class="fas fa-arrow-up"></i> -3% this week
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Cards Section -->
+<section class="mb-5">
+    <h2 class="mb-4 fw-bold">
+        <i class="fas fa-sparkles text-primary me-2"></i>Key Features
+    </h2>
+    <div class="row g-4">
+        <!-- Easy Scheduling -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Easy Scheduling</h5>
+                    <p class="card-text text-secondary">Book appointments with just a few clicks. Choose from available time slots and receive instant confirmation.</p>
+                    <a href="#" class="text-primary fw-bold text-decoration-none">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professional Care -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Professional Care</h5>
+                    <p class="card-text text-secondary">Access to experienced healthcare professionals. View doctor profiles and ratings from other patients.</p>
+                    <a href="#" class="text-primary fw-bold text-decoration-none">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secure & Private -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Secure & Private</h5>
+                    <p class="card-text text-secondary">Your health information is protected with enterprise-grade security and encryption.</p>
+                    <a href="#" class="text-primary fw-bold text-decoration-none">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-Time Notifications -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Real-Time Notifications</h5>
+                    <p class="card-text text-secondary">Receive instant updates about appointments, reminders, and important healthcare information.</p>
+                    <a href="#" class="text-primary fw-bold text-decoration-none">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-User Support -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-people-arrows"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Multi-User Support</h5>
+                    <p class="card-text text-secondary">Dedicated interfaces for patients, doctors, and administrators with role-based access control.</p>
+                    <a href="#" class="text-primary fw-bold text-decoration-none">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Analytics -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 feature-card">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Advanced Analytics</h5>
+                    <p class="card-text text-secondary">Comprehensive reporting and insights to help optimize clinic operations and patient care.</p>
+                    <a href="#" class="text-primary fw-bold text-decoration-none">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Appointments Table -->
+<section class="mb-5">
+    <h2 class="mb-4 fw-bold">
+        <i class="fas fa-calendar-day text-primary me-2"></i>Upcoming Appointments
+    </h2>
+    <div class="card border-0">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user-circle me-2"></i>Patient</th>
+                        <th><i class="fas fa-stethoscope me-2"></i>Doctor</th>
+                        <th><i class="fas fa-calendar me-2"></i>Date & Time</th>
+                        <th><i class="fas fa-info-circle me-2"></i>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fw-600">
+                            <strong>Ahmed Hassan</strong><br/>
+                            <small class="text-secondary">#001234</small>
+                        </td>
+                        <td>Dr. Sarah Johnson</td>
+                        <td>
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>Dec 15, 2026 · 10:00 AM
+                        </td>
+                        <td>
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-check-circle me-1"></i>Confirmed
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary">View</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-600">
+                            <strong>Fatima Al-Mansouri</strong><br/>
+                            <small class="text-secondary">#001235</small>
+                        </td>
+                        <td>Dr. Mohammed Ali</td>
+                        <td>
+                            <i class="fas fa-calendar-alt me-2 text-warning"></i>Dec 16, 2026 · 02:30 PM
+                        </td>
+                        <td>
+                            <span class="badge bg-warning bg-opacity-10 text-warning">
+                                <i class="fas fa-hourglass-half me-1"></i>Pending
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary">View</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-600">
+                            <strong>Omar Khalil</strong><br/>
+                            <small class="text-secondary">#001236</small>
+                        </td>
+                        <td>Dr. Emily Davis</td>
+                        <td>
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>Dec 17, 2026 · 11:15 AM
+                        </td>
+                        <td>
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-check-circle me-1"></i>Confirmed
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary">View</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-light text-center border-top">
+            <a href="#" class="text-primary fw-bold text-decoration-none">
+                <i class="fas fa-arrow-right me-2"></i>View All Appointments
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="mb-5 py-5 px-4 rounded-lg" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--accent) 100%); box-shadow: var(--shadow-lg);">
+    <div class="text-center text-white">
+        <h2 class="fw-bold mb-3" style="color: white;">
+            <i class="fas fa-rocket me-2"></i>Ready to Get Started?
+        </h2>
+        <p class="lead mb-4 fs-5" style="color: rgba(255,255,255,0.9);">
+            Schedule your first appointment today and experience better healthcare management.
+        </p>
+        <button class="btn btn-light btn-lg fw-bold">
+            <i class="fas fa-calendar-plus me-2"></i>Book Your Appointment Now
+        </button>
+    </div>
+</section>
+
+<!-- Info Boxes -->
+<section class="mb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="info-box text-center p-4 rounded-lg" style="background: linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(0, 212, 255, 0.05) 100%); border: 1px solid var(--border-light);">
+                <div class="mb-3" style="font-size: 2.5rem; color: var(--primary);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h5 class="fw-bold mb-2">24/7 Availability</h5>
+                <p class="text-secondary small mb-0">Book appointments anytime, anywhere. Our system is available round the clock.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box text-center p-4 rounded-lg" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid var(--border-light);">
+                <div class="mb-3" style="font-size: 2.5rem; color: var(--success);">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Instant Confirmations</h5>
+                <p class="text-secondary small mb-0">Get immediate appointment confirmations with automated reminders.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box text-center p-4 rounded-lg" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%); border: 1px solid var(--border-light);">
+                <div class="mb-3" style="font-size: 2.5rem; color: var(--info);">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Support Team</h5>
+                <p class="text-secondary small mb-0">Our dedicated team is ready to help you with any questions or issues.</p>
+            </div>
+        </div>
+    </div>
+</section>

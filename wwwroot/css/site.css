@@ -1,31 +1,805 @@
-html {
-  font-size: 14px;
+/* ============================================
+   MEDICLINIC - Modern Hospital Design System
+   Bootstrap 5 Compatible | Responsive | Accessible
+   ============================================ */
+
+:root {
+  /* Primary Colors */
+  --clinic-primary: #0b6efd;
+  --clinic-primary-dark: #095ed6;
+  --clinic-accent: #00b894;
+  --clinic-accent-light: #4cd964;
+
+  /* Neutral Colors */
+  --clinic-muted: #6c757d;
+  --clinic-muted-light: #adb5bd;
+  --clinic-text: #222;
+  --clinic-text-light: #555;
+
+  /* Backgrounds */
+  --clinic-bg: #f8f9fb;
+  --clinic-bg-secondary: #f0f2f5;
+  --clinic-card-bg: #ffffff;
+  --clinic-surface: #eef3fb;
+
+  /* Status Colors */
+  --clinic-success: #28a745;
+  --clinic-warning: #ffc107;
+  --clinic-danger: #dc3545;
+  --clinic-info: #17a2b8;
+
+  /* Shadows */
+  --clinic-shadow-xs: 0 2px 4px rgba(20, 30, 60, 0.04);
+  --clinic-shadow-sm: 0 4px 12px rgba(20, 30, 60, 0.06);
+  --clinic-shadow-md: 0 6px 18px rgba(20, 30, 60, 0.08);
+  --clinic-shadow-lg: 0 12px 30px rgba(20, 30, 60, 0.12);
+
+  /* Spacing */
+  --clinic-radius: 10px;
+  --clinic-radius-lg: 16px;
+  --clinic-radius-sm: 6px;
+
+  /* Typography */
+  --clinic-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --clinic-font-mono: "Courier New", monospace;
+
+  /* Transitions */
+  --clinic-transition: 180ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  --clinic-transition-slow: 300ms ease-in-out;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --clinic-bg: #0b0f14;
+    --clinic-bg-secondary: #11171d;
+    --clinic-card-bg: #0f1720;
+    --clinic-surface: #091018;
+    --clinic-text: #e6eef8;
+    --clinic-text-light: #c5cfe0;
+    --clinic-muted: #9aa6b2;
+    --clinic-muted-light: #6b7784;
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+/* ============================================
+   BASE STYLES
+   ============================================ */
 
 html {
-  position: relative;
-  min-height: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 body {
-  margin-bottom: 60px;
+  font-family: var(--clinic-font-family);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--clinic-text);
+  background: linear-gradient(180deg, var(--clinic-bg), #ffffff 80%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Container */
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+  max-width: 1200px;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+main.main-content {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: var(--clinic-text);
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 1.1rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+p {
+  color: var(--clinic-text-light);
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--clinic-text);
+}
+
+small,
+.small {
+  font-size: 0.875rem;
+}
+
+/* Text utilities */
+.text-muted-light {
+  color: var(--clinic-muted) !important;
+}
+
+.text-clinic-primary {
+  color: var(--clinic-primary) !important;
+}
+
+.text-clinic-accent {
+  color: var(--clinic-accent) !important;
+}
+
+/* ============================================
+   LINKS & ANCHORS
+   ============================================ */
+
+a {
+  color: var(--clinic-primary);
+  text-decoration: none;
+  transition: color var(--clinic-transition), text-decoration var(--clinic-transition);
+}
+
+a:hover {
+  color: var(--clinic-primary-dark);
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--clinic-primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ============================================
+   NAVBAR & HEADER
+   ============================================ */
+
+.navbar-clinic {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(11, 110, 253, 0.08);
+  box-shadow: var(--clinic-shadow-sm);
+  padding: 0.75rem 0;
+  z-index: 1000;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navbar-clinic {
+    background: linear-gradient(180deg, rgba(15, 23, 32, 0.95), rgba(15, 23, 32, 0.85));
+    border-bottom-color: rgba(11, 110, 253, 0.15);
+  }
+}
+
+.navbar-clinic .navbar-brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.3px;
+  color: var(--clinic-primary) !important;
+  transition: transform var(--clinic-transition);
+}
+
+.navbar-clinic .navbar-brand:hover {
+  transform: scale(1.05);
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+  color: var(--clinic-accent);
+}
+
+.navbar-clinic .nav-link {
+  color: var(--clinic-text) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  position: relative;
+  transition: color var(--clinic-transition);
+}
+
+.navbar-clinic .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background: var(--clinic-primary);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--clinic-transition);
+}
+
+.navbar-clinic .nav-link:hover::after,
+.navbar-clinic .nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.card {
+  border: 0;
+  background: var(--clinic-card-bg);
+  border-radius: var(--clinic-radius-lg);
+  box-shadow: var(--clinic-shadow-sm);
+  transition: transform var(--clinic-transition), box-shadow var(--clinic-transition);
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--clinic-shadow-md);
+}
+
+.card-header {
+  background: linear-gradient(135deg, rgba(11, 110, 253, 0.08), rgba(0, 184, 148, 0.04));
+  border-bottom: 1px solid rgba(11, 110, 253, 0.1);
+  font-weight: 600;
+  color: var(--clinic-text);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  background: rgba(11, 110, 253, 0.02);
+  border-top: 1px solid rgba(11, 110, 253, 0.08);
+}
+
+.card-title {
+  color: var(--clinic-text);
+  font-weight: 700;
+}
+
+.card-text {
+  color: var(--clinic-text-light);
+}
+
+/* Card Variants */
+.card.card-primary {
+  border-left: 4px solid var(--clinic-primary);
+}
+
+.card.card-success {
+  border-left: 4px solid var(--clinic-success);
+}
+
+.card.card-warning {
+  border-left: 4px solid var(--clinic-warning);
+}
+
+.card.card-danger {
+  border-left: 4px solid var(--clinic-danger);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+  border-radius: var(--clinic-radius-sm);
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  transition: all var(--clinic-transition);
+  border: 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--clinic-primary), var(--clinic-primary-dark));
+  box-shadow: var(--clinic-shadow-sm);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--clinic-shadow-md);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--clinic-primary);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: var(--clinic-surface);
+  color: var(--clinic-primary);
+  border: 2px solid var(--clinic-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--clinic-primary);
+  color: white;
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--clinic-primary);
+  color: var(--clinic-primary);
+}
+
+.btn-outline-primary:hover {
+  background: var(--clinic-primary);
+  border-color: var(--clinic-primary);
+  color: white;
+}
+
+.btn-lg {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+
+.form-control,
+.form-select {
+  border-radius: var(--clinic-radius-sm);
+  border: 1.5px solid rgba(11, 110, 253, 0.15);
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  transition: border-color var(--clinic-transition), box-shadow var(--clinic-transition);
+  background: var(--clinic-card-bg);
+  color: var(--clinic-text);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--clinic-primary);
+  box-shadow: 0 0 0 0.2rem rgba(11, 110, 253, 0.1);
+  outline: none;
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--clinic-text);
+  margin-bottom: 0.5rem;
+}
+
+.form-text {
+  color: var(--clinic-muted);
+  font-size: 0.875rem;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-select {
+  border-radius: var(--clinic-radius-sm);
+}
+
+/* Input Groups */
+.input-group .form-control {
+  border-right: 0;
+}
+
+.input-group-text {
+  background: var(--clinic-surface);
+  border: 1.5px solid rgba(11, 110, 253, 0.15);
+  border-left: 0;
+  color: var(--clinic-muted);
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+.table {
+  color: var(--clinic-text);
+  border-collapse: collapse;
+}
+
+.table thead th {
+  background: linear-gradient(135deg, rgba(11, 110, 253, 0.08), rgba(0, 184, 148, 0.04));
+  border-bottom: 2px solid rgba(11, 110, 253, 0.15);
+  color: var(--clinic-text);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+}
+
+.table tbody td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(11, 110, 253, 0.08);
+  color: var(--clinic-text-light);
+}
+
+.table tbody tr:hover {
+  background: rgba(11, 110, 253, 0.03);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background: rgba(11, 110, 253, 0.02);
+}
+
+/* ============================================
+   ALERTS & BADGES
+   ============================================ */
+
+.alert {
+  border-radius: var(--clinic-radius-sm);
+  border: 0;
+  padding: 1rem;
+}
+
+.alert-primary {
+  background: rgba(11, 110, 253, 0.1);
+  color: var(--clinic-primary-dark);
+}
+
+.alert-success {
+  background: rgba(40, 167, 69, 0.1);
+  color: #1e5631;
+}
+
+.alert-warning {
+  background: rgba(255, 193, 7, 0.1);
+  color: #856404;
+}
+
+.alert-danger {
+  background: rgba(220, 53, 69, 0.1);
+  color: #721c24;
+}
+
+.badge {
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.badge-primary {
+  background: var(--clinic-primary);
+  color: white;
+}
+
+.badge-success {
+  background: var(--clinic-success);
+  color: white;
+}
+
+.badge-warning {
+  background: var(--clinic-warning);
+  color: #000;
+}
+
+.badge-danger {
+  background: var(--clinic-danger);
+  color: white;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.hero-section {
+  background: linear-gradient(135deg, rgba(11, 110, 253, 0.1), rgba(0, 184, 148, 0.05));
+  border-radius: var(--clinic-radius-lg);
+  padding: 3rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--clinic-shadow-sm);
+}
+
+.hero-section h1 {
+  color: var(--clinic-primary);
+  margin-bottom: 1rem;
+}
+
+.hero-section p {
+  font-size: 1.1rem;
+  color: var(--clinic-text-light);
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   GRID & TILES
+   ============================================ */
+
+.tile-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media (min-width: 576px) {
+  .tile-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .tile-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .tile-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.tile,
+.stat-tile {
+  background: var(--clinic-card-bg);
+  border-radius: var(--clinic-radius);
+  padding: 1.5rem;
+  box-shadow: var(--clinic-shadow-sm);
+  transition: all var(--clinic-transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.tile:hover,
+.stat-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--clinic-shadow-md);
+}
+
+.tile-icon {
+  font-size: 2.5rem;
+  color: var(--clinic-primary);
+  margin-bottom: 1rem;
+}
+
+.tile-title {
+  font-weight: 700;
+  color: var(--clinic-text);
+  margin-bottom: 0.5rem;
+}
+
+.tile-subtitle {
+  font-size: 0.9rem;
+  color: var(--clinic-muted);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--clinic-primary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--clinic-muted);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+footer.footer-clinic {
+  background: linear-gradient(180deg, #1a2332, #0d1620);
+  color: #c5cfe0;
+  margin-top: auto;
+  border-top: 1px solid rgba(11, 110, 253, 0.15);
+}
+
+.footer-clinic h6 {
+  color: #ffffff;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-clinic a {
+  color: #c5cfe0;
+  transition: color var(--clinic-transition);
+}
+
+.footer-clinic a:hover {
+  color: var(--clinic-primary);
+  text-decoration: none;
+}
+
+.footer-clinic p {
+  color: #c5cfe0;
+  margin-bottom: 0.5rem;
+}
+
+.border-muted-light {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ============================================
+   UTILITIES & HELPERS
+   ============================================ */
+
+.mt-spacious {
+  margin-top: 3rem;
+}
+
+.mb-spacious {
+  margin-bottom: 3rem;
+}
+
+.p-spacious {
+  padding: 2rem;
+}
+
+.rounded-clinic {
+  border-radius: var(--clinic-radius-lg) !important;
+}
+
+.rounded-clinic-sm {
+  border-radius: var(--clinic-radius-sm) !important;
+}
+
+.shadow-clinic {
+  box-shadow: var(--clinic-shadow-md) !important;
+}
+
+.shadow-clinic-sm {
+  box-shadow: var(--clinic-shadow-sm) !important;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--clinic-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--clinic-primary);
+  outline-offset: 4px;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--clinic-primary);
+  color: white;
+  padding: 8px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (max-width: 576px) {
+  html {
+    font-size: 15px;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .navbar-clinic .navbar-brand {
+    font-size: 1.1rem;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background: white;
+    color: #000;
+  }
+
+  .no-print,
+  .navbar-clinic,
+  footer.footer-clinic,
+  .btn {
+    display: none !important;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+/* ============================================
+   ANIMATION CLASSES
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

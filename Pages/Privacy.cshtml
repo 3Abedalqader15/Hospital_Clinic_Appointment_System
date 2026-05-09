@@ -1,8 +1,188 @@
 ﻿@page
 @model PrivacyModel
 @{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Privacy Policy - MediClinic";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="mb-5">
+    <h1 class="display-4 fw-bold mb-3">
+        <i class="fas fa-shield-alt text-primary me-2"></i>Privacy Policy
+    </h1>
+    <p class="lead text-secondary fs-5">
+        Your privacy is important to us. Learn how MediClinic protects your personal and medical information.
+    </p>
+</div>
+
+<div class="row g-5">
+    <div class="col-lg-3 d-none d-lg-block">
+        <!-- Table of Contents -->
+        <div class="card position-sticky" style="top: 100px;">
+            <div class="card-body">
+                <h6 class="fw-bold text-primary mb-3">
+                    <i class="fas fa-list me-2"></i>Contents
+                </h6>
+                <nav class="nav flex-column">
+                    <a class="nav-link text-decoration-none text-secondary" href="#data-collection">Data Collection</a>
+                    <a class="nav-link text-decoration-none text-secondary" href="#data-protection">Data Protection</a>
+                    <a class="nav-link text-decoration-none text-secondary" href="#cookies">Cookies Policy</a>
+                    <a class="nav-link text-decoration-none text-secondary" href="#user-rights">Your Rights</a>
+                    <a class="nav-link text-decoration-none text-secondary" href="#contact">Contact Us</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <!-- Data Collection Section -->
+        <section class="mb-5" id="data-collection">
+            <div class="card border-0 mb-4">
+                <div class="card-body">
+                    <h3 class="card-title fw-bold mb-3">
+                        <i class="fas fa-database text-primary me-2"></i>1. Data Collection
+                    </h3>
+                    <p class="text-secondary mb-3">
+                        MediClinic collects information necessary to provide healthcare appointment management services:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <strong class="text-primary"><i class="fas fa-check-circle me-2"></i>Personal Information:</strong>
+                            Name, email address, phone number, date of birth
+                        </li>
+                        <li class="mb-2">
+                            <strong class="text-primary"><i class="fas fa-check-circle me-2"></i>Medical Information:</strong>
+                            Health conditions, allergies, medications, appointment history
+                        </li>
+                        <li class="mb-2">
+                            <strong class="text-primary"><i class="fas fa-check-circle me-2"></i>Usage Data:</strong>
+                            Login information, appointment interactions, system usage patterns
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Protection Section -->
+        <section class="mb-5" id="data-protection">
+            <div class="card border-0 mb-4">
+                <div class="card-body">
+                    <h3 class="card-title fw-bold mb-3">
+                        <i class="fas fa-lock text-success me-2"></i>2. Data Protection & Security
+                    </h3>
+                    <p class="text-secondary mb-3">
+                        We implement comprehensive security measures to protect your data:
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex gap-2">
+                                <div class="text-success fw-bold" style="min-width: 30px;">✓</div>
+                                <div>
+                                    <strong>End-to-End Encryption</strong>
+                                    <p class="small text-secondary mb-0">All data is encrypted in transit and at rest</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-2">
+                                <div class="text-success fw-bold" style="min-width: 30px;">✓</div>
+                                <div>
+                                    <strong>Access Control</strong>
+                                    <p class="small text-secondary mb-0">Role-based access ensures only authorized personnel access data</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-2">
+                                <div class="text-success fw-bold" style="min-width: 30px;">✓</div>
+                                <div>
+                                    <strong>Regular Audits</strong>
+                                    <p class="small text-secondary mb-0">Frequent security assessments and compliance checks</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-2">
+                                <div class="text-success fw-bold" style="min-width: 30px;">✓</div>
+                                <div>
+                                    <strong>Backup Protection</strong>
+                                    <p class="small text-secondary mb-0">Regular backups with disaster recovery procedures</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cookies Section -->
+        <section class="mb-5" id="cookies">
+            <div class="card border-0 mb-4">
+                <div class="card-body">
+                    <h3 class="card-title fw-bold mb-3">
+                        <i class="fas fa-cookie text-warning me-2"></i>3. Cookies & Tracking
+                    </h3>
+                    <p class="text-secondary mb-3">
+                        MediClinic uses cookies to enhance your user experience:
+                    </p>
+                    <div class="alert alert-info border-0" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Essential Cookies:</strong> Required for system functionality and security
+                    </div>
+                    <div class="alert alert-info border-0" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Performance Cookies:</strong> Help us understand how you use the system
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Rights Section -->
+        <section class="mb-5" id="user-rights">
+            <div class="card border-0 mb-4">
+                <div class="card-body">
+                    <h3 class="card-title fw-bold mb-3">
+                        <i class="fas fa-user-check text-success me-2"></i>4. Your Rights
+                    </h3>
+                    <p class="text-secondary mb-3">
+                        You have the following rights regarding your personal data:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong class="text-primary">Right to Access:</strong> Request a copy of your data
+                        </li>
+                        <li class="mb-3">
+                            <strong class="text-primary">Right to Rectification:</strong> Correct inaccurate information
+                        </li>
+                        <li class="mb-3">
+                            <strong class="text-primary">Right to Erasure:</strong> Request deletion of your data
+                        </li>
+                        <li class="mb-3">
+                            <strong class="text-primary">Right to Restrict Processing:</strong> Limit how your data is used
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="card border-0 bg-primary bg-opacity-10">
+                <div class="card-body text-center">
+                    <h3 class="card-title fw-bold mb-3">
+                        <i class="fas fa-envelope text-primary me-2"></i>Questions About Privacy?
+                    </h3>
+                    <p class="text-secondary mb-4">
+                        If you have any concerns or questions about our privacy practices, please don't hesitate to reach out.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="mailto:privacy@mediClinic.com" class="btn btn-primary">
+                            <i class="fas fa-envelope me-2"></i>Email Us
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-phone me-2"></i>Call Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

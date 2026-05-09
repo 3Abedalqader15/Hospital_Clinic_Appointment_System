@@ -1,0 +1,351 @@
+<!-- MediClinic UI Components Showcase -->
+<!-- This page demonstrates all available design system components -->
+<!-- Copy and paste sections as needed into your pages -->
+
+@{
+    ViewData["Title"] = "UI Components Showcase";
+}
+
+<div class="container py-5">
+
+    <!-- Buttons Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Buttons</h2>
+        <div class="row g-3">
+            <div class="col-12">
+                <h5>Primary Buttons</h5>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-primary">Primary</button>
+                    <button class="btn btn-primary" disabled>Disabled</button>
+                    <button class="btn btn-primary btn-lg">Large</button>
+                    <button class="btn btn-primary btn-sm">Small</button>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <h5>Secondary Buttons</h5>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-secondary">Secondary</button>
+                    <button class="btn btn-outline-primary">Outline Primary</button>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <h5>Buttons with Icons</h5>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Save
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-2"></i>Edit
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-trash me-2"></i>Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Cards</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Basic Card</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>This is a basic card with a header, body, and footer.</p>
+                    </div>
+                    <div class="card-footer">
+                        Card Footer
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Primary Card</h5>
+                        <p class="card-text">Card with left border accent in primary color.</p>
+                        <a href="#" class="btn btn-sm btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card card-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Success Card</h5>
+                        <p class="card-text">Card with left border accent in success color.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card card-danger">
+                    <div class="card-body">
+                        <h5 class="card-title">Danger Card</h5>
+                        <p class="card-text">Card with left border accent in danger color.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Forms Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Forms</h2>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Example Form</h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">+971</span>
+                                    <input type="tel" class="form-control" id="phone" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="department" class="form-label">Department</label>
+                                <select class="form-select" id="department">
+                                    <option>- Select Department -</option>
+                                    <option>General Practice</option>
+                                    <option>Cardiology</option>
+                                    <option>Pediatrics</option>
+                                    <option>Orthopedics</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Appointment Date</label>
+                                <input type="date" class="form-control" id="date" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="terms" />
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the terms and conditions
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alerts & Badges Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Alerts & Badges</h2>
+
+        <div class="mb-4">
+            <h5>Alerts</h5>
+            <div class="alert alert-primary" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Info:</strong> This is an informational alert message.
+            </div>
+
+            <div class="alert alert-success" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> Your appointment has been confirmed.
+            </div>
+
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Warning:</strong> Please review your appointment details.
+            </div>
+
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-times-circle me-2"></i>
+                <strong>Error:</strong> Something went wrong. Please try again.
+            </div>
+        </div>
+
+        <div>
+            <h5>Badges</h5>
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="badge badge-primary">Primary</span>
+                <span class="badge badge-success">Confirmed</span>
+                <span class="badge badge-warning">Pending</span>
+                <span class="badge badge-danger">Cancelled</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tables Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Tables</h2>
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Patient Name</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Ahmed Hassan</td>
+                            <td>Dr. Sarah Johnson</td>
+                            <td>Dec 15, 2026</td>
+                            <td><span class="badge badge-success">Confirmed</span></td>
+                            <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Fatima Al-Mansouri</td>
+                            <td>Dr. Mohammed Ali</td>
+                            <td>Dec 16, 2026</td>
+                            <td><span class="badge badge-warning">Pending</span></td>
+                            <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Omar Khalil</td>
+                            <td>Dr. Emily Davis</td>
+                            <td>Dec 17, 2026</td>
+                            <td><span class="badge badge-danger">Cancelled</span></td>
+                            <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tile Grid Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Tile Grids</h2>
+        <div class="tile-grid mb-5">
+            <div class="stat-tile">
+                <div class="stat-number">1,234</div>
+                <div class="stat-label">Total Patients</div>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-number">456</div>
+                <div class="stat-label">Appointments</div>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-number">89%</div>
+                <div class="stat-label">Satisfaction Rate</div>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-number">2,089</div>
+                <div class="stat-label">Completed Visits</div>
+            </div>
+        </div>
+
+        <h5>Feature Tiles</h5>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="tile">
+                    <i class="fas fa-calendar-check tile-icon"></i>
+                    <div class="tile-title">Easy Booking</div>
+                    <div class="tile-subtitle">Schedule in seconds</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="tile">
+                    <i class="fas fa-shield-alt tile-icon"></i>
+                    <div class="tile-title">Secure</div>
+                    <div class="tile-subtitle">Your data is protected</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="tile">
+                    <i class="fas fa-headset tile-icon"></i>
+                    <div class="tile-title">Support 24/7</div>
+                    <div class="tile-subtitle">Always here to help</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Typography</h2>
+
+        <div class="mb-4">
+            <h1>Heading 1</h1>
+            <h2>Heading 2</h2>
+            <h3>Heading 3</h3>
+            <h4>Heading 4</h4>
+            <h5>Heading 5</h5>
+            <h6>Heading 6</h6>
+        </div>
+
+        <div class="mb-4">
+            <p class="lead">This is a lead paragraph. It's slightly larger and used for introductory text.</p>
+            <p>This is a regular paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p class="text-muted-light">This is muted text used for secondary information.</p>
+        </div>
+
+        <div>
+            <p><strong>Bold text</strong> for emphasis</p>
+            <p><em>Italic text</em> for styling</p>
+            <p><small>Small text</small> for less important information</p>
+        </div>
+    </section>
+
+    <!-- Color Palette Section -->
+    <section class="mb-5">
+        <h2 class="mb-4">Color Palette</h2>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3">
+                <div class="rounded-clinic p-4 text-white" style="background: var(--clinic-primary);">
+                    <strong>Primary</strong><br/>
+                    #0b6efd
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="rounded-clinic p-4 text-white" style="background: var(--clinic-accent);">
+                    <strong>Accent</strong><br/>
+                    #00b894
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="rounded-clinic p-4 text-white" style="background: var(--clinic-success);">
+                    <strong>Success</strong><br/>
+                    #28a745
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="rounded-clinic p-4 text-white" style="background: var(--clinic-danger);">
+                    <strong>Danger</strong><br/>
+                    #dc3545
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
