@@ -76,7 +76,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
 
         }
 
-        [HttpGet("{doctorId:int}/Doctor" , Name = "GetTimeByDoctorId")] // // Get : api/TimeSlot/all
+        [HttpGet("{doctorId:int}/Doctor" , Name = "GetTimeSlotsByDoctorId")] // // Get : api/TimeSlot/all
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TimeSloteShortDto>>> GetTimeSlotsByDoctorId([FromRoute] int doctorId)
         {
@@ -85,6 +85,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             var dto = timeslot.Select(t => new TimeSloteShortDto
             {
                 Id = t.Id,
+                DoctorId = t.DoctorId,
                 DayOfWeek = t.DayOfWeek,
                 StartTime = t.StartTime,
                 EndTime = t.EndTime,
@@ -103,6 +104,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             var dto = timeslot.Select(t => new TimeSloteShortDto
             {
                 Id = t.Id,
+                DoctorId = t.DoctorId,
                 DayOfWeek = t.DayOfWeek,
                 StartTime = t.StartTime,
                 EndTime = t.EndTime,
@@ -167,6 +169,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             var dto = timeSlots.Select(t => new TimeSloteShortDto
             {
                 Id = t.Id,
+                DoctorId = t.DoctorId,
                 DayOfWeek = t.DayOfWeek,
                 StartTime = t.StartTime,
                 EndTime = t.EndTime,
@@ -184,6 +187,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             var dto = timeSlots.Select(t => new TimeSloteShortDto
             {
                 Id = t.Id,
+                DoctorId = t.DoctorId,
                 DayOfWeek = t.DayOfWeek,
                 StartTime = t.StartTime,
                 EndTime = t.EndTime,
