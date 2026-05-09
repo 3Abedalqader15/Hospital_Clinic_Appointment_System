@@ -73,6 +73,30 @@ namespace Hospital_Clinic_Appointment_System.Controllers
             return Ok(dto);
         }
 
+        // GET: api/Appointment/All
+        [HttpGet("All")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<ActionResult<IEnumerable<AppointmentAdminDto>>> GetAllAppointmentsAsync()
+        {
+            var appointments = await appointmentRepository.GetAllAppointmentsWithDetailsAsync();
+
+            var dtos = appointments.Select(a => new AppointmentAdminDto
+            {
+                Id = a.Id,
+                DoctorId = a.DoctorId,
+                PatientId = a.PatientId,
+                DoctorName = a.doctor?.user?.Name ?? a.doctor?.Name ?? string.Empty,
+                PatientName = a.patient?.user?.Name ?? a.patient?.Name ?? string.Empty,
+                AppointmentDate = a.AppointmentDate,
+                Status = a.Status,
+                Reason = a.Reason,
+                Notes = a.Notes,
+                ReminderSent = a.ReminderSent
+            });
+
+            return Ok(dtos);
+        }
+
         // GET: api/Appointment/Doctor/{doctorId}
         [HttpGet("Doctor/{doctorId}")]
         [Authorize(Policy = "DoctorOrAdmin")]

@@ -66,6 +66,16 @@ namespace Hospital_Clinic_Appointment_System.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Appointment>> GetAllAppointmentsWithDetailsAsync()
+        {
+            return await context.Appointments
+                .Include(a => a.doctor)
+                    .ThenInclude(d => d.user)
+                .Include(a => a.patient)
+                    .ThenInclude(p => p.user)
+                .ToListAsync();
+        }
+
         public async Task<bool> CancelAppointmentAsync(int appointmentId) 
         {
             var appointment = await context.Appointments.FindAsync(appointmentId);

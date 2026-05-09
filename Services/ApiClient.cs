@@ -1,0 +1,144 @@
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
+using Hospital_Clinic_Appointment_System.Helpers;
+using Microsoft.AspNetCore.Http;
+
+namespace Hospital_Clinic_Appointment_System.Services
+{
+    public interface IApiClient
+    {
+        Task<ApiResult<T>> GetAsync<T>(string url);
+        Task<ApiResult<T>> PostAsync<T>(string url, object payload);
+        Task<ApiResult> PostAsync(string url, object payload);
+        Task<ApiResult> PutAsync(string url, object payload);
+        Task<ApiResult> DeleteAsync(string url);
+    }
+
+    public class ApiResult
+    {
+        public bool Success { get; init; }
+        public string? Error { get; init; }
+    }
+
+    public class ApiResult<T> : ApiResult
+    {
+        public T? Data { get; init; }
+    }
+
+    public class ApiClient : IApiClient
+    {
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly IHttpContextAccessor httpContextAccessor;
+
+        public ApiClient(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
+        {
+            this.httpClientFactory = httpClientFactory;
+            this.httpContextAccessor = httpContextAccessor;
+        }
+
+        public Task<ApiResult<T>> GetAsync<T>(string url)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            return SendAsync<T>(request);
+        }
+
+        public Task<ApiResult<T>> PostAsync<T>(string url, object payload)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = JsonContent.Create(payload)
+            };
+            return SendAsync<T>(request);
+        }
+
+        public Task<ApiResult> PostAsync(string url, object payload)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = JsonContent.Create(payload)
+            };
+            return SendAsync(request);
+        }
+
+        public Task<ApiResult> PutAsync(string url, object payload)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = JsonContent.Create(payload)
+            };
+            return SendAsync(request);
+        }
+
+        public Task<ApiResult> DeleteAsync(string url)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
+            return SendAsync(request);
+        }
+
+        private async Task<ApiResult<T>> SendAsync<T>(HttpRequestMessage request)
+        {
+            var client = CreateClient();
+            using var response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.Content.Headers.ContentLength == 0)
+                {
+                    return new ApiResult<T> { Success = true };
+                }
+
+                var data = await response.Content.ReadFromJsonAsync<T>(JsonOptions);
+                return new ApiResult<T> { Success = true, Data = data };
+            }
+
+            var error = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(error))
+            {
+                error = response.ReasonPhrase;
+            }
+
+            return new ApiResult<T> { Success = false, Error = error };
+        }
+
+        private async Task<ApiResult> SendAsync(HttpRequestMessage request)
+        {
+            var client = CreateClient();
+            using var response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                return new ApiResult { Success = true };
+            }
+
+            var error = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(error))
+            {
+                error = response.ReasonPhrase;
+            }
+
+            return new ApiResult { Success = false, Error = error };
+        }
+
+        private HttpClient CreateClient()
+        {
+            var client = httpClientFactory.CreateClient();
+            var request = httpContextAccessor.HttpContext?.Request;
+            if (request != null)
+            {
+                client.BaseAddress = new Uri($"{request.Scheme}://{request.Host}");
+            }
+
+            var token = httpContextAccessor.HttpContext?.Session.GetString(SessionKeys.AuthToken);
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            return client;
+        }
+    }
+}

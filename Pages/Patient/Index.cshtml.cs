@@ -1,0 +1,47 @@
+using Hospital_Clinic_Appointment_System.Models;
+using Hospital_Clinic_Appointment_System.Pages.Shared;
+using Hospital_Clinic_Appointment_System.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Hospital_Clinic_Appointment_System.Pages.Patient
+{
+    public class IndexModel : AuthenticatedPageModel
+    {
+        public IndexModel(IApiClient apiClient) : base(apiClient)
+        {
+        }
+
+        public PatientShortDto? Patient { get; private set; }
+        public List<AppointmentShortDto> Appointments { get; private set; } = new();
+        public string? ErrorMessage { get; private set; }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            var guard = RequireAuthentication("Patient");
+            if (guard != null)
+            {
+                return guard;
+            }
+
+            var patientResult = await ApiClient.GetAsync<PatientShortDto>("/api/Patient/Me");
+            if (!patientResult.Success || patientResult.Data == null)
+            {
+                ErrorMessage = patientResult.Error ?? "Unable to load patient profile.";
+                return Page();
+            }
+
+            Patient = patientResult.Data;
+            var appointmentsResult = await ApiClient.GetAsync<List<AppointmentShortDto>>($"/api/Patient/{Patient.Id}/Appointments");
+            if (appointmentsResult.Success && appointmentsResult.Data != null)
+            {
+                Appointments = appointmentsResult.Data.OrderBy(a => a.AppointmentDate).Take(10).ToList();
+            }
+            else if (!appointmentsResult.Success)
+            {
+                ErrorMessage = appointmentsResult.Error ?? "Unable to load appointments.";
+            }
+
+            return Page();
+        }
+    }
+}

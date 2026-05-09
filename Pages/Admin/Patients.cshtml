@@ -1,0 +1,105 @@
+@page
+@model Hospital_Clinic_Appointment_System.Pages.Admin.PatientsModel
+@{
+    ViewData["Title"] = "Manage Patients";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0"><i class="fas fa-user-injured me-2 text-primary"></i>Patients</h2>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+<div class="card border-0 mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Add Patient</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Create" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">User Account</label>
+                <select class="form-select" name="CreatePatient.UserId" required>
+                    <option value="">Select user</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value="@user.Id">@user.Name (@user.Email)</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Name</label>
+                <input class="form-control" name="CreatePatient.Name" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Emergency Number</label>
+                <input class="form-control" name="CreatePatient.EmergencyNumber" />
+            </div>
+            <div class="col-12">
+                <label class="form-label">Medical History</label>
+                <textarea class="form-control" name="CreatePatient.MedicalHistory" rows="2"></textarea>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="CreatePatient.IsActive" value="true" checked />
+                    <label class="form-check-label">Active</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Add Patient</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Emergency</th>
+                    <th>Medical History</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in Model.Patients)
+                {
+                    <tr>
+                        <td>@patient.Id</td>
+                        <td>@patient.Name</td>
+                        <td>@patient.EmergencyNumber</td>
+                        <td class="text-truncate" style="max-width: 240px;">@patient.MedicalHistory</td>
+                        <td class="text-end">
+                            <form method="post" asp-page-handler="Update" class="d-inline-flex flex-wrap gap-2 align-items-center justify-content-end">
+                                <input type="hidden" name="UpdatePatientId" value="@patient.Id" />
+                                <input class="form-control form-control-sm" name="UpdatePatient.Name" value="@patient.Name" />
+                                <input class="form-control form-control-sm" name="UpdatePatient.EmergencyNumber" value="@patient.EmergencyNumber" />
+                                <input class="form-control form-control-sm" name="UpdatePatient.MedicalHistory" value="@patient.MedicalHistory" />
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                            </form>
+                            <form method="post" asp-page-handler="Delete" class="d-inline">
+                                <input type="hidden" name="DeletePatientId" value="@patient.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Patients.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No patients found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

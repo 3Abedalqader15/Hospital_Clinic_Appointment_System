@@ -2,6 +2,7 @@
 {
     public class TimeSloteShortDto
     {
+        public int Id { get; set; }
 
         public int DoctorId { get; set; }
         public string DayOfWeek { get; set; }

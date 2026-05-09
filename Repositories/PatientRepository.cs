@@ -21,10 +21,14 @@ namespace Hospital_Clinic_Appointment_System.Repositories
         {
             return await context.Appointments
                 .AsNoTracking()
+                .Include(a => a.doctor)
+                    .ThenInclude(d => d.user)
                 .Where(a => a.PatientId == patientId)
                 .Select(a => new AppointmentShortDto
                 {
                     Id = a.Id,
+                    DoctorId = a.DoctorId,
+                    DoctorName = a.doctor.user != null ? a.doctor.user.Name : a.doctor.Name,
                     AppointmentDate = a.AppointmentDate,
                     Status = a.Status
                 })
@@ -36,6 +40,13 @@ namespace Hospital_Clinic_Appointment_System.Repositories
             return await context.Patients
                 .Include(p => p.user)
                 .FirstOrDefaultAsync(p => p.Id == patientId);
+        }
+
+        public async Task<Patient?> GetPatientByUserIdAsync(int userId)
+        {
+            return await context.Patients
+                .Include(p => p.user)
+                .FirstOrDefaultAsync(p => p.User_Id == userId);
         }
 
 

@@ -47,6 +47,13 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
             .FirstOrDefaultAsync(d => d.Id == doctorId);
     }
 
+    public async Task<Doctor?> GetDoctorByUserIdAsync(int userId)
+    {
+        return await context.Doctors
+            .Include(d => d.user)
+            .FirstOrDefaultAsync(d => d.User_Id == userId);
+    }
+
     public async Task<bool> IsDoctorAvailableAsync(int doctorId, DateTime appointmentDate)
     {
       
