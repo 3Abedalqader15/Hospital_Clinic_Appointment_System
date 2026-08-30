@@ -17,7 +17,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
-		<PackageReference Include="Microsoft.OpenApi" Version="2.4.1" />
+		<PackageReference Include="Microsoft.OpenApi" Version="3.10.2" />
 		<!-- احذف هذه -->
 		<!-- <PackageReference Include="Microsoft.OpenApi" Version="3.3.1" /> -->
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />

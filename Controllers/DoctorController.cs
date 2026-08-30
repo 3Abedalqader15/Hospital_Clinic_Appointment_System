@@ -1,4 +1,4 @@
-﻿using Hospital_Clinic_Appointment_System.Entities;
+using Hospital_Clinic_Appointment_System.Entities;
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authorization;
@@ -242,7 +242,7 @@ namespace Hospital_Clinic_Appointment_System.Controllers
                 Specialization = createDto.Specialization,
                 LicenseNumber = createDto.LicenseNumber,
                 ExperienceYears = createDto.ExperienceYears,
-                Bio = createDto.Bio,
+                Bio = createDto.Bio ?? string.Empty,
                 profilePictureUrl = createDto.profilePictureUrl,
                 isActive = createDto.isActive
             };

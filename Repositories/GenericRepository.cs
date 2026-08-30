@@ -18,7 +18,7 @@ namespace Hospital_Clinic_Appointment_System.Repositories
             this.dbSet = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
+        public async Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object?>>[] includes)
         {
             IQueryable<T> query = dbSet;
             if (includes != null && includes.Length > 0)
@@ -40,7 +40,7 @@ namespace Hospital_Clinic_Appointment_System.Repositories
             return await dbSet.AnyAsync(e => e.Id == id); 
         }
 
-        public async Task<T?> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        public async Task<T?> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object?>>[] includes)
         {
             IQueryable<T> query = dbSet;
             if (includes != null && includes.Length > 0)
