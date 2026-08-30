@@ -1,4 +1,3 @@
-﻿using Hospital_Clinic_Appointment_System.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hospital_Clinic_Appointment_System.Models
@@ -10,29 +9,23 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         [Required]
         [StringLength(50)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        [Required]
         [MaxLength(13)]
-        public string Phone_Number { get; set; }
+        public string Phone_Number { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(50)]
-        public string Specialization { get; set; }
-
+        public string Specialization { get; set; } = string.Empty;
 
         [Required]
         public int ExperienceYears { get; set; }
 
         public bool isActive { get; set; }
 
-
-        public UserDto user { get;  set; }
-
-
+        public UserDto? user { get; set; }
     }
 }

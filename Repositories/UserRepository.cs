@@ -1,4 +1,4 @@
-﻿using Hospital_Clinic_Appointment_System.App_Context;
+using Hospital_Clinic_Appointment_System.App_Context;
 using Hospital_Clinic_Appointment_System.Entities;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
@@ -14,22 +14,22 @@ namespace Hospital_Clinic_Appointment_System.Repositories
             this.context = context;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
-        public async Task<User> GetUserByNameAsync(string name)
+        public async Task<User?> GetUserByNameAsync(string name)
         {
             return await context.Users.FirstOrDefaultAsync(u => u.Name == name);
         }
-        public async Task<User> GetUserWithRolesByIdAsync(int id)
+        public async Task<User?> GetUserWithRolesByIdAsync(int id)
         {
             return await context.Users
                 .Include(u => u.UserRoles)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<User> UpdatePhoneNumperOfUser(int userId, string newPhoneNumber)
+        public async Task<User?> UpdatePhoneNumperOfUser(int userId, string newPhoneNumber)
         {
             var user = await context.Users.FindAsync(userId);
             if (user != null)
@@ -41,7 +41,7 @@ namespace Hospital_Clinic_Appointment_System.Repositories
             return user;  
         }
 
-        public async Task<User> UpdatePasswordOfUser(int userId, string newPassword)
+        public async Task<User?> UpdatePasswordOfUser(int userId, string newPassword)
         {
             var user = await context.Users.FindAsync(userId);
             if (user != null)
@@ -53,7 +53,7 @@ namespace Hospital_Clinic_Appointment_System.Repositories
             return user;
         }
 
-        public async Task<User> UpdateEmailOfUser(int userId, string newEmail)
+        public async Task<User?> UpdateEmailOfUser(int userId, string newEmail)
         {
             var user = await context.Users.FindAsync(userId);
             if (user != null)
@@ -63,8 +63,8 @@ namespace Hospital_Clinic_Appointment_System.Repositories
                 await context.SaveChangesAsync();
             }
             return user;
-            }
-        public async Task<User> UpdateNameOfUser(int userId, string newName)
+        }
+        public async Task<User?> UpdateNameOfUser(int userId, string newName)
         {
             var user = await context.Users.FindAsync(userId);
             if (user != null)
@@ -75,7 +75,5 @@ namespace Hospital_Clinic_Appointment_System.Repositories
             }
             return user;
         }
-
-
     }
 }

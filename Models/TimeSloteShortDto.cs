@@ -1,11 +1,11 @@
-﻿namespace Hospital_Clinic_Appointment_System.Models
+namespace Hospital_Clinic_Appointment_System.Models
 {
     public class TimeSloteShortDto
     {
         public int Id { get; set; }
 
         public int DoctorId { get; set; }
-        public string DayOfWeek { get; set; }
+        public string DayOfWeek { get; set; } = string.Empty;
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public int SlotDuration { get; set; } // in minutes

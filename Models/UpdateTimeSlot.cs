@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital_Clinic_Appointment_System.Models
 {
@@ -6,7 +6,7 @@ namespace Hospital_Clinic_Appointment_System.Models
     {
         [RegularExpression(@"^(Sunday|Monday|Tuesday|Wednesday|Thursday|Saturday)$",
             ErrorMessage = "Day must be a weekday (except Friday)")]
-        public string DayOfWeek { get; set; }
+        public string DayOfWeek { get; set; } = string.Empty;
 
         [DataType(DataType.Time)]
         public TimeSpan StartTime { get; set; }

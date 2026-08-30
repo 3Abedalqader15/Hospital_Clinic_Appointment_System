@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital_Clinic_Appointment_System.Models
 {
@@ -6,20 +6,20 @@ namespace Hospital_Clinic_Appointment_System.Models
     {
         [Required(ErrorMessage = "Name is required")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Phone number is required")]
         [RegularExpression(@"^07[0-9]{8}$",ErrorMessage = "Phone number must start with 07 and be 10 digits")]
-        public string Phone_Number { get; set; }
+        public string Phone_Number { get; set; } = string.Empty;
 
 
         [Required(ErrorMessage = "Birth date is required")]
@@ -28,7 +28,7 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         [Required(ErrorMessage = "Role is required")]
         [RegularExpression(@"^(Patient|Doctor|Admin)$", ErrorMessage = "Role must be either Patient, Doctor, or Admin")]
-        public string Role { get; set; }
+        public string Role { get; set; } = string.Empty;
 
 
 

@@ -1,31 +1,23 @@
-﻿using Hospital_Clinic_Appointment_System.Entities;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Hospital_Clinic_Appointment_System.Entities
 {
     public class UserRole
     {
-        
-
-        //[ForeignKey("user")]
         public int User_Id { get; set; }
 
-        public User user { get; set; }
+        // EF Core navigation property - loaded via Include()
+        public User user { get; set; } = null!;
 
-        //[ForeignKey("role")]
         public int Role_Id { get; set; }
 
-        public Role role { get; set; }
-        
-
-
-
-
-
-
-
-
-
+        // EF Core navigation property - loaded via Include()
+        public Role role { get; set; } = null!;
     }
 }
+
+
+
+
+
+
+
+

@@ -1,6 +1,4 @@
-﻿using Hospital_Clinic_Appointment_System.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital_Clinic_Appointment_System.Entities
 {
@@ -9,27 +7,27 @@ namespace Hospital_Clinic_Appointment_System.Entities
         [Key]
         public int Id { get; set; }
 
-        //[ForeignKey("user")]  
         public int User_Id { get; set; }
 
-        public string? Name {  get; set; }
+        public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Phone_Number { get; set; }
 
-        public string MedicalHistory { get; set; }
+        public string? MedicalHistory { get; set; }
 
-        public string EmergencyNumber { get; set; }
+        public string? EmergencyNumber { get; set; }
+
         public bool IsActive { get; set; } = true;
 
-        // Relationships
+        // EF Core navigation property - nullable because not always loaded
         public User? user { get; set; }
+
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-
-
-
-
-
-
-
     }
 }
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital_Clinic_Appointment_System.Models
 {
@@ -6,16 +6,16 @@ namespace Hospital_Clinic_Appointment_System.Models
     {
         [Required(ErrorMessage = "Current password is required")]
         [DataType(DataType.Password)]
-        public string CurrentPassword { get; set; }
+        public string CurrentPassword { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "New password is required")]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters")]
         [DataType(DataType.Password)]
-        public string NewPassword { get; set; }
+        public string NewPassword { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Confirm password is required")]
         [Compare("NewPassword", ErrorMessage = "Passwords do not match")]
         [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

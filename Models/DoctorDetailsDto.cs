@@ -1,6 +1,4 @@
-﻿using Hospital_Clinic_Appointment_System.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital_Clinic_Appointment_System.Models
 {
@@ -14,23 +12,22 @@ namespace Hospital_Clinic_Appointment_System.Models
 
         [Required]
         [MaxLength(50)]
-        public string Name { set; get; }
+        public string Name { set; get; } = string.Empty;
 
         [Required]
         [MaxLength(100)]
-        public string Email { set; get; }
+        public string Email { set; get; } = string.Empty;
 
         [Required]
         [MaxLength(13)]
-        public string Phone_Number { set; get; }
+        public string Phone_Number { set; get; } = string.Empty;
 
         [Required]
         [MaxLength(50)]
-
-        public string Specialization { set; get; }
+        public string Specialization { set; get; } = string.Empty;
 
         [MaxLength(50)]
-        public string LicenseNumber { set; get; }
+        public string LicenseNumber { set; get; } = string.Empty;
 
         [Required]
         public int ExperienceYears { set; get; }
@@ -43,11 +40,6 @@ namespace Hospital_Clinic_Appointment_System.Models
         [Required]
         public bool IsActive { get; set; }
 
-
-        public ICollection<TimeSloteShortDto> TimeSlots { get; set; }
-
-        //public ICollection<AppointmentShortDto> Appointments { get; set; }
-
-
+        public ICollection<TimeSloteShortDto>? TimeSlots { get; set; }
     }
 }

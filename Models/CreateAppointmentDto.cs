@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital_Clinic_Appointment_System.Models
 {
@@ -16,11 +16,11 @@ namespace Hospital_Clinic_Appointment_System.Models
         public DateTime AppointmentDate { get; set; }
         [Required(ErrorMessage = "Reason for appointment is required")]
         [StringLength(500, ErrorMessage = "Reason cannot exceed 500 characters")]
-        public string Reason { get; set; }
-        [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters")]
-        public string Status { get; set; } // Scheduled .. Completed .. Cancelled .. No-Show 
-        [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters")]
-        public string Notes { get; set; } 
+        public string Reason { get; set; } = string.Empty;
+        [StringLength(100, ErrorMessage = "Status cannot exceed 100 characters")]
+        public string? Status { get; set; } // Defaults to "Scheduled" if not provided
+        [StringLength(500, ErrorMessage = "Notes cannot exceed 500 characters")]
+        public string? Notes { get; set; } 
         
     }
 }
