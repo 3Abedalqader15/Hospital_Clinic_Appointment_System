@@ -4,70 +4,284 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="row justify-content-center">
-    <div class="col-lg-6 col-md-8">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header">
-                <h4 class="mb-0"><i class="fas fa-user-plus me-2 text-primary"></i>Create Account</h4>
-            </div>
-            <div class="card-body">
-                @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-                {
-                    <div class="alert alert-danger">@Model.ErrorMessage</div>
-                }
+<style>
+    body {
+        background-color: #f0f8ff;
+        font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    .register-container {
+        min-height: calc(100vh - 150px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
 
-                <form method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    .register-card {
+        border: none;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        background: #ffffff;
+    }
 
-                    <div class="mb-3">
-                        <label asp-for="Register.Name" class="form-label"></label>
-                        <input asp-for="Register.Name" class="form-control" />
-                        <span asp-validation-for="Register.Name" class="text-danger"></span>
+    .register-brand-side {
+        background: #045c85; /* Dark blue from the image */
+        color: white;
+        padding: 4rem 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-top-left-radius: 24px;
+        border-bottom-left-radius: 24px;
+        position: relative;
+    }
+    
+    .register-brand-side::after {
+        content: '';
+        position: absolute;
+        bottom: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+    }
+    .register-brand-side::before {
+        content: '';
+        position: absolute;
+        top: -30px;
+        left: -30px;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+    }
+
+    .register-form-side {
+        padding: 3rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 12px;
+        padding: 0.8rem 1.2rem;
+        border: 1px solid #e0e6ed;
+        background-color: #f8fafc;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #045c85;
+        box-shadow: 0 0 0 0.25rem rgba(4, 92, 133, 0.15);
+        background-color: #ffffff;
+    }
+    
+    .input-group-text {
+        border-radius: 12px 0 0 12px;
+        border: 1px solid #e0e6ed;
+        background-color: #f8fafc;
+        border-right: none;
+        color: #045c85;
+    }
+    
+    .form-control.with-icon, .form-select.with-icon {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    .btn-primary-custom {
+        background-color: #0fb3b8;
+        border: none;
+        border-radius: 12px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #0d9ea3;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(15, 179, 184, 0.3);
+        color: white;
+    }
+
+    .pastel-badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        background-color: #f9d6e1; /* Pink pastel from image */
+        color: #a82755;
+    }
+    
+    .auth-link {
+        color: #0fb3b8;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+    .auth-link:hover {
+        color: #045c85;
+    }
+
+    @@media (max-width: 991.98px) {
+        .register-brand-side {
+            border-bottom-left-radius: 0;
+            border-top-right-radius: 24px;
+            padding: 3rem 2rem;
+        }
+        .register-form-side {
+            padding: 2.5rem 2rem;
+        }
+    }
+</style>
+
+<div class="container register-container">
+    <div class="row w-100 justify-content-center">
+        <div class="col-12 col-xl-11">
+            <div class="row g-0 register-card">
+                <!-- Branding Side -->
+                <div class="col-lg-5 register-brand-side d-none d-lg-flex">
+                    <div style="position: relative; z-index: 1;">
+                        <div class="mb-4 d-flex align-items-center">
+                            <i class="fas fa-heartbeat fa-2x me-2 text-white"></i>
+                            <h3 class="fw-bold mb-0 text-white">CareConnect</h3>
+                        </div>
+                        <h1 class="display-6 fw-bold mb-4">Start Your Health Journey.</h1>
+                        <p class="lead opacity-75 mb-5">Create an account to book appointments, manage your health records, and connect with top specialists.</p>
+                        
+                        <div class="mt-auto">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                                    <i class="fas fa-check text-white"></i>
+                                </div>
+                                <span>Quick & Easy Registration</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                                    <i class="fas fa-check text-white"></i>
+                                </div>
+                                <span>Secure Health Records</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                                    <i class="fas fa-check text-white"></i>
+                                </div>
+                                <span>24/7 Access to Care</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Side -->
+                <div class="col-lg-7 register-form-side">
+                    <div class="text-center text-lg-start mb-4">
+                        <span class="pastel-badge">New Patient</span>
+                        <h2 class="fw-bold text-dark mb-2">Create an Account</h2>
+                        <p class="text-muted">Fill in your details to get started.</p>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Register.Email" class="form-label"></label>
-                        <input asp-for="Register.Email" class="form-control" />
-                        <span asp-validation-for="Register.Email" class="text-danger"></span>
-                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i> @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
 
-                    <div class="mb-3">
-                        <label asp-for="Register.Password" class="form-label"></label>
-                        <input asp-for="Register.Password" class="form-control" />
-                        <span asp-validation-for="Register.Password" class="text-danger"></span>
-                    </div>
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-medium"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="Register.Phone_Number" class="form-label"></label>
-                        <input asp-for="Register.Phone_Number" class="form-control" />
-                        <span asp-validation-for="Register.Phone_Number" class="text-danger"></span>
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Register.Name" class="form-label fw-semibold text-dark">Full Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent">
+                                        <i class="far fa-user"></i>
+                                    </span>
+                                    <input asp-for="Register.Name" class="form-control with-icon" placeholder="John Doe" />
+                                </div>
+                                <span asp-validation-for="Register.Name" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Register.Phone_Number" class="form-label fw-semibold text-dark">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </span>
+                                    <input asp-for="Register.Phone_Number" class="form-control with-icon" placeholder="+1 (555) 000-0000" />
+                                </div>
+                                <span asp-validation-for="Register.Phone_Number" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Register.BirthDay" class="form-label"></label>
-                        <input asp-for="Register.BirthDay" class="form-control" type="date" />
-                        <span asp-validation-for="Register.BirthDay" class="text-danger"></span>
-                    </div>
+                        <div class="mb-3">
+                            <label asp-for="Register.Email" class="form-label fw-semibold text-dark">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent">
+                                    <i class="far fa-envelope"></i>
+                                </span>
+                                <input asp-for="Register.Email" class="form-control with-icon" placeholder="name@example.com" />
+                            </div>
+                            <span asp-validation-for="Register.Email" class="text-danger small mt-1 d-block"></span>
+                        </div>
 
-                    <div class="mb-4">
-                        <label asp-for="Register.Role" class="form-label"></label>
-                        <select asp-for="Register.Role" class="form-select">
-                            <option value="">Select role</option>
-                            <option value="Patient">Patient</option>
-                            <option value="Doctor">Doctor</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                        <span asp-validation-for="Register.Role" class="text-danger"></span>
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Register.Password" class="form-label fw-semibold text-dark">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input asp-for="Register.Password" type="password" class="form-control with-icon" placeholder="Create a password" />
+                                </div>
+                                <span asp-validation-for="Register.Password" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Register.BirthDay" class="form-label fw-semibold text-dark">Date of Birth</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                    <input asp-for="Register.BirthDay" type="date" class="form-control with-icon" />
+                                </div>
+                                <span asp-validation-for="Register.BirthDay" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-user-check me-2"></i>Register
-                    </button>
-                </form>
-            </div>
-            <div class="card-footer text-center bg-light">
-                <span class="text-muted">Already have an account?</span>
-                <a asp-page="/Account/Login" class="fw-bold ms-1">Sign in</a>
+                        <div class="mb-4">
+                            <label asp-for="Register.Role" class="form-label fw-semibold text-dark">Account Type</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent">
+                                    <i class="fas fa-users"></i>
+                                </span>
+                                <select asp-for="Register.Role" class="form-select with-icon">
+                                    <option value="">Select your role...</option>
+                                    <option value="Patient">Patient</option>
+                                    <option value="Doctor">Doctor</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="Register.Role" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-custom w-100 mb-3">
+                            Create Account <i class="fas fa-user-plus ms-2"></i>
+                        </button>
+                        
+                        <div class="text-center mt-3">
+                            <span class="text-muted">Already have an account?</span>
+                            <a asp-page="/Account/Login" class="auth-link ms-1">Sign in here</a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
