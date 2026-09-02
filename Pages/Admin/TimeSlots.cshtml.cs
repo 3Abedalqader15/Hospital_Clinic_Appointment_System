@@ -4,17 +4,13 @@ using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hospital_Clinic_Appointment_System.Pages.Admin
-{
-    [Authorize(Roles = "Admin")]
-    public class TimeSlotsModel : AuthenticatedPageModel
-    {
-        public TimeSlotsModel(IApiClient apiClient) : base(apiClient)
-        {
-        }
+namespace Hospital_Clinic_Appointment_System.Pages.Admin;
 
-        public List<TimeSloteShortDto> TimeSlots { get; private set; } = new();
-        public List<DoctorListDto> Doctors { get; private set; } = new();
+[Authorize(Roles = "Admin")]
+public class TimeSlotsModel(IApiClient apiClient) : AuthenticatedPageModel(apiClient)
+{
+    public List<TimeSloteShortDto> TimeSlots { get; private set; } = [];
+    public List<DoctorListDto> Doctors { get; private set; } = [];
 
         [BindProperty]
         public CreateTimeSlot CreateTimeSlot { get; set; } = new();
@@ -98,4 +94,3 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
             }
         }
     }
-}

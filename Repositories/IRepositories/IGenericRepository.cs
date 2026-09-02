@@ -1,27 +1,17 @@
 using System.Linq.Expressions;
 
-namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
+namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories;
+
+public interface IGenericRepository<T> where T : class
 {
-    public interface IGenericRepository<T> where T : class 
-    {
-        Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object?>>[] includes);
-        Task<T?> GetByIdAsync(int id); 
-        Task AddAsync(T entity);
+    Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object?>>[] includes);
+    Task<T?> GetByIdAsync(int id);
+    Task AddAsync(T entity);
 
-        Task<T?> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object?>>[] includes);
+    Task<T?> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object?>>[] includes);
 
-        void Update(T entity);
-        void Delete(T entity);
+    void Update(T entity);
+    void Delete(T entity);
 
-        Task<bool> ExistsAsync(int id);
-
-
-        Task SaveChangesAsync(); 
-
-
-
-
-
-
-    }
+    Task SaveChangesAsync();
 }

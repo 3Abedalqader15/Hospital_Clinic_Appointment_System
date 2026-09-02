@@ -1,113 +1,207 @@
 @page
 @model Hospital_Clinic_Appointment_System.Pages.Doctor.TimeSlotsModel
 @{
-    ViewData["Title"] = "Doctor Time Slots";
+    ViewData["Title"] = "My Time Slots";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0"><i class="fas fa-clock me-2 text-primary"></i>My Time Slots</h2>
+    <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addTimeSlotModal">
+        <i class="fas fa-plus me-2"></i>Add Time Slot
+    </button>
 </div>
 
 @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
 {
-    <div class="alert alert-danger">@Model.ErrorMessage</div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
 {
-    <div class="alert alert-success">@Model.StatusMessage</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@Model.StatusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
-<div class="card border-0 mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">Add Time Slot</h5>
-    </div>
-    <div class="card-body">
-        <form method="post" asp-page-handler="Create" class="row g-3">
-            <div class="col-md-3">
-                <label class="form-label">Day of Week</label>
-                <select class="form-select" name="CreateTimeSlot.DayOfWeek" required>
-                    <option value="Sunday">Sunday</option>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Saturday">Saturday</option>
-                </select>
+<!-- Add Time Slot Modal -->
+<div class="modal fade" id="addTimeSlotModal" tabindex="-1" aria-labelledby="addTimeSlotModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light border-bottom-0">
+                <h5 class="modal-title fw-bold" id="addTimeSlotModalLabel"><i class="fas fa-calendar-plus me-2 text-primary"></i>Add New Time Slot</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Start</label>
-                <input class="form-control" type="time" name="CreateTimeSlot.StartTime" />
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">End</label>
-                <input class="form-control" type="time" name="CreateTimeSlot.EndTime" />
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Duration (min)</label>
-                <input class="form-control" type="number" name="CreateTimeSlot.SlotDuration" min="15" />
-            </div>
-            <div class="col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="CreateTimeSlot.IsActive" value="true" checked />
-                    <label class="form-check-label">Active</label>
+            <form method="post" asp-page-handler="Create">
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label text-muted small fw-bold">Day of Week</label>
+                            <select class="form-select" name="CreateTimeSlot.DayOfWeek" required>
+                                <option value="Sunday">Sunday</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Saturday">Saturday</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small fw-bold">Start Time</label>
+                            <input class="form-control" type="time" name="CreateTimeSlot.StartTime" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small fw-bold">End Time</label>
+                            <input class="form-control" type="time" name="CreateTimeSlot.EndTime" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small fw-bold">Slot Duration (min)</label>
+                            <input class="form-control" type="number" name="CreateTimeSlot.SlotDuration" min="15" value="30" required />
+                        </div>
+                        <div class="col-12 mt-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="CreateTimeSlot.IsActive" value="true" checked id="addSlotActiveStatus" />
+                                <label class="form-check-label" for="addSlotActiveStatus">Active Status</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Add Time Slot</button>
-            </div>
-        </form>
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4">Save Time Slot</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="card border-0">
+<!-- Data Table -->
+<div class="card border-0 shadow-sm">
     <div class="table-responsive">
-        <table class="table mb-0">
-            <thead>
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
                 <tr>
-                    <th>ID</th>
-                    <th>Day</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Duration</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
+                    <th class="text-muted fw-bold ps-4">ID</th>
+                    <th class="text-muted fw-bold">Day</th>
+                    <th class="text-muted fw-bold">Time Window</th>
+                    <th class="text-muted fw-bold">Duration</th>
+                    <th class="text-muted fw-bold">Status</th>
+                    <th class="text-end text-muted fw-bold pe-4">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var slot in Model.TimeSlots)
                 {
                     <tr>
-                        <td>@slot.Id</td>
-                        <td>@slot.DayOfWeek</td>
-                        <td>@slot.StartTime.ToString(@"hh\:mm")</td>
-                        <td>@slot.EndTime.ToString(@"hh\:mm")</td>
-                        <td>@slot.SlotDuration min</td>
-                        <td>@(slot.IsActive ? "Active" : "Inactive")</td>
-                        <td class="text-end">
-                            <form method="post" asp-page-handler="Update" class="d-inline-flex flex-wrap gap-2 align-items-center justify-content-end">
-                                <input type="hidden" name="UpdateTimeSlotId" value="@slot.Id" />
-                                <input class="form-control form-control-sm" name="UpdateTimeSlot.DayOfWeek" value="@slot.DayOfWeek" />
-                                <input class="form-control form-control-sm" type="time" name="UpdateTimeSlot.StartTime" value="@slot.StartTime.ToString(@"hh\:mm")" />
-                                <input class="form-control form-control-sm" type="time" name="UpdateTimeSlot.EndTime" value="@slot.EndTime.ToString(@"hh\:mm")" />
-                                <input class="form-control form-control-sm" type="number" name="UpdateTimeSlot.SlotDuration" value="@slot.SlotDuration" />
-                                <input type="hidden" name="UpdateTimeSlot.IsActive" value="false" />
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="UpdateTimeSlot.IsActive" value="true" @(slot.IsActive ? "checked" : "") />
-                                    <label class="form-check-label">Active</label>
+                        <td class="ps-4 fw-medium text-secondary">#@slot.Id</td>
+                        <td>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-3 py-2">
+                                <i class="far fa-calendar-alt me-1"></i> @slot.DayOfWeek
+                            </span>
+                        </td>
+                        <td>
+                            <div class="text-dark fw-medium">
+                                @slot.StartTime.ToString(@"hh\:mm") - @slot.EndTime.ToString(@"hh\:mm")
+                            </div>
+                        </td>
+                        <td class="text-muted">
+                            <i class="fas fa-stopwatch me-1 text-info opacity-75"></i> @slot.SlotDuration min
+                        </td>
+                        <td>
+                            @if (slot.IsActive)
+                            {
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-2">
+                                    <i class="fas fa-check-circle me-1"></i> Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-3 py-2">
+                                    <i class="fas fa-times-circle me-1"></i> Inactive
+                                </span>
+                            }
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex gap-2">
+                                <!-- Edit Button -->
+                                <button type="button" class="btn btn-sm btn-light text-primary hover-shadow" data-bs-toggle="modal" data-bs-target="#editModal-@slot.Id" title="Edit Time Slot">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
+                                <!-- Delete Form -->
+                                <form method="post" asp-page-handler="Delete" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this time slot?');">
+                                    <input type="hidden" name="DeleteTimeSlotId" value="@slot.Id" />
+                                    <button type="submit" class="btn btn-sm btn-light text-danger hover-shadow" title="Delete Time Slot">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Edit Modal for this row -->
+                            <div class="modal fade text-start" id="editModal-@slot.Id" tabindex="-1" aria-labelledby="editModalLabel-@slot.Id" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content border-0 shadow-lg">
+                                        <div class="modal-header bg-light border-bottom-0">
+                                            <h5 class="modal-title fw-bold" id="editModalLabel-@slot.Id"><i class="fas fa-edit me-2 text-primary"></i>Edit Time Slot</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="post" asp-page-handler="Update">
+                                            <div class="modal-body p-4">
+                                                <input type="hidden" name="UpdateTimeSlotId" value="@slot.Id" />
+                                                <div class="row g-3">
+                                                    <div class="col-md-12">
+                                                        <label class="form-label text-muted small fw-bold">Day of Week</label>
+                                                        <select class="form-select" name="UpdateTimeSlot.DayOfWeek" required>
+                                                            <option value="Sunday" selected="@(slot.DayOfWeek == "Sunday")">Sunday</option>
+                                                            <option value="Monday" selected="@(slot.DayOfWeek == "Monday")">Monday</option>
+                                                            <option value="Tuesday" selected="@(slot.DayOfWeek == "Tuesday")">Tuesday</option>
+                                                            <option value="Wednesday" selected="@(slot.DayOfWeek == "Wednesday")">Wednesday</option>
+                                                            <option value="Thursday" selected="@(slot.DayOfWeek == "Thursday")">Thursday</option>
+                                                            <option value="Saturday" selected="@(slot.DayOfWeek == "Saturday")">Saturday</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label text-muted small fw-bold">Start Time</label>
+                                                        <input class="form-control" type="time" name="UpdateTimeSlot.StartTime" value="@slot.StartTime.ToString(@"hh\:mm")" required />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label text-muted small fw-bold">End Time</label>
+                                                        <input class="form-control" type="time" name="UpdateTimeSlot.EndTime" value="@slot.EndTime.ToString(@"hh\:mm")" required />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label text-muted small fw-bold">Slot Duration (min)</label>
+                                                        <input class="form-control" type="number" name="UpdateTimeSlot.SlotDuration" value="@slot.SlotDuration" min="15" required />
+                                                    </div>
+                                                    <div class="col-12 mt-3">
+                                                        <input type="hidden" name="UpdateTimeSlot.IsActive" value="false" />
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" name="UpdateTimeSlot.IsActive" value="true" @(slot.IsActive ? "checked" : "") id="editActiveStatus-@slot.Id" />
+                                                            <label class="form-check-label" for="editActiveStatus-@slot.Id">Active Status</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer bg-light border-top-0">
+                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary px-4">Update Changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
-                            </form>
-                            <form method="post" asp-page-handler="Delete" class="d-inline">
-                                <input type="hidden" name="DeleteTimeSlotId" value="@slot.Id" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                            </form>
+                            </div>
                         </td>
                     </tr>
                 }
                 @if (!Model.TimeSlots.Any())
                 {
                     <tr>
-                        <td colspan="7" class="text-center text-muted">No time slots found.</td>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <div class="mb-3"><i class="fas fa-clock fa-3x opacity-25"></i></div>
+                            <p class="mb-0">You have no time slots configured.</p>
+                            <small>Click "Add Time Slot" to define availability.</small>
+                        </td>
                     </tr>
                 }
             </tbody>

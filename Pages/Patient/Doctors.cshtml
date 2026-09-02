@@ -1,68 +1,104 @@
 @page
 @model Hospital_Clinic_Appointment_System.Pages.Patient.DoctorsModel
 @{
-    ViewData["Title"] = "Browse Doctors";
+    ViewData["Title"] = "Our Doctors";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0"><i class="fas fa-user-md me-2 text-primary"></i>Doctors</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="fas fa-user-md me-2 text-primary"></i>Our Medical Specialists</h2>
+    <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#bookAppointmentModal">
+        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+    </button>
 </div>
 
 @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
 {
-    <div class="alert alert-danger">@Model.ErrorMessage</div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
 {
-    <div class="alert alert-success">@Model.StatusMessage</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@Model.StatusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
-<div class="card border-0 mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">Book Appointment</h5>
-    </div>
-    <div class="card-body">
-        <form method="post" asp-page-handler="Book" class="row g-3">
-            <div class="col-md-4">
-                <label class="form-label">Doctor</label>
-                <select class="form-select" name="CreateAppointment.DoctorId" required>
-                    <option value="">Select doctor</option>
-                    @foreach (var doctor in Model.Doctors)
-                    {
-                        <option value="@doctor.Id">@doctor.Name (@doctor.Specialization)</option>
-                    }
-                </select>
+<!-- Book Appointment Modal -->
+<div class="modal fade" id="bookAppointmentModal" tabindex="-1" aria-labelledby="bookAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light border-bottom-0">
+                <h5 class="modal-title fw-bold" id="bookAppointmentModalLabel"><i class="fas fa-calendar-check me-2 text-primary"></i>Book New Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-md-4">
-                <label class="form-label">Appointment Date</label>
-                <input class="form-control" type="datetime-local" name="CreateAppointment.AppointmentDate" />
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Reason</label>
-                <input class="form-control" name="CreateAppointment.Reason" />
-            </div>
-            <div class="col-12">
-                <label class="form-label">Notes</label>
-                <textarea class="form-control" name="CreateAppointment.Notes" rows="2"></textarea>
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Book Appointment</button>
-            </div>
-        </form>
+            <form method="post" asp-page-handler="Book">
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Select Doctor</label>
+                            <select class="form-select" name="CreateAppointment.DoctorId" required>
+                                <option value="">Select a specialist...</option>
+                                @foreach (var doctor in Model.Doctors)
+                                {
+                                    <option value="@doctor.Id">@doctor.Name (@doctor.Specialization)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Preferred Date & Time</label>
+                            <input class="form-control" type="datetime-local" name="CreateAppointment.AppointmentDate" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">Reason for Visit</label>
+                            <input class="form-control" name="CreateAppointment.Reason" placeholder="Brief reason for your appointment (e.g., Annual Checkup, Flu symptoms)" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">Additional Notes (Optional)</label>
+                            <textarea class="form-control" name="CreateAppointment.Notes" rows="3" placeholder="Any additional information the doctor should know before your visit..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="row g-4">
+<!-- Doctors Grid -->
+<div class="row g-4 mb-5">
     @foreach (var doctor in Model.Doctors)
     {
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 border-0">
-                <div class="card-body">
-                    <h5 class="card-title">@doctor.Name</h5>
-                    <p class="card-text text-muted mb-2">@doctor.Specialization</p>
-                    <p class="card-text small text-muted">Experience: @doctor.ExperienceYears years</p>
-                    <p class="card-text small text-muted">Email: @doctor.Email</p>
-                    <p class="card-text small text-muted">Phone: @doctor.Phone_Number</p>
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                <div class="card-body p-4 text-center">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h5 class="card-title fw-bold mb-1">@doctor.Name</h5>
+                    <p class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-3 py-1 mb-3">@doctor.Specialization</p>
+                    
+                    <div class="text-start mt-4">
+                        <p class="card-text text-muted mb-2">
+                            <i class="fas fa-briefcase me-2 text-secondary w-20px"></i> @doctor.ExperienceYears Years Experience
+                        </p>
+                        <p class="card-text text-muted mb-2 text-truncate" title="@doctor.Email">
+                            <i class="fas fa-envelope me-2 text-secondary w-20px"></i> <a href="mailto:@doctor.Email" class="text-decoration-none text-muted">@doctor.Email</a>
+                        </p>
+                        <p class="card-text text-muted mb-0">
+                            <i class="fas fa-phone-alt me-2 text-secondary w-20px"></i> @doctor.Phone_Number
+                        </p>
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-top-0 p-3 text-center">
+                    <button type="button" class="btn btn-sm btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#bookAppointmentModal" onclick="document.querySelector('select[name=\'CreateAppointment.DoctorId\']').value = '@doctor.Id'">
+                        <i class="fas fa-calendar-alt me-2"></i>Book with Dr. @doctor.Name.Split(' ').LastOrDefault()
+                    </button>
                 </div>
             </div>
         </div>
@@ -70,7 +106,18 @@
     @if (!Model.Doctors.Any())
     {
         <div class="col-12">
-            <div class="alert alert-info">No doctors available at this time.</div>
+            <div class="text-center py-5 text-muted bg-white rounded shadow-sm">
+                <div class="mb-3"><i class="fas fa-user-md fa-3x opacity-25"></i></div>
+                <p class="mb-0">We currently have no doctors available in the system.</p>
+                <small>Please check back later.</small>
+            </div>
         </div>
     }
 </div>
+
+<style>
+    .w-20px {
+        width: 20px;
+        text-align: center;
+    }
+</style>

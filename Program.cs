@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 
 
 
-using System;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidateModelAttribute>();
+    options.SuppressAsyncSuffixInActionNames = false;
 });
 builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
@@ -71,7 +71,7 @@ builder.Services.AddHttpClient(); // also register the unnamed client
                 OnAuthenticationFailed = ctx =>
                 {
                     // Log ctx.Exception.Message somewhere (ILogger) for debugging
-                    Console.WriteLine("JWT auth failed: " + ctx.Exception?.Message);
+                    Console.WriteLine("JWT auth failed: " + ctx.Exception.Message);
                     return Task.CompletedTask;
                 },
                 OnMessageReceived = ctx =>

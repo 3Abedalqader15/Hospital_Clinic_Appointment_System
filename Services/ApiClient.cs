@@ -1,12 +1,10 @@
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
 using Hospital_Clinic_Appointment_System.Helpers;
-using Microsoft.AspNetCore.Http;
 
-namespace Hospital_Clinic_Appointment_System.Services
-{
-    public interface IApiClient
+namespace Hospital_Clinic_Appointment_System.Services;
+
+public interface IApiClient
     {
         Task<ApiResult<T>> GetAsync<T>(string url);
         Task<ApiResult<T>> PostAsync<T>(string url, object payload);
@@ -26,21 +24,12 @@ namespace Hospital_Clinic_Appointment_System.Services
         public T? Data { get; init; }
     }
 
-    public class ApiClient : IApiClient
+    public class ApiClient(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor) : IApiClient
     {
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };
-
-        private readonly IHttpClientFactory httpClientFactory;
-        private readonly IHttpContextAccessor httpContextAccessor;
-
-        public ApiClient(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
-        {
-            this.httpClientFactory = httpClientFactory;
-            this.httpContextAccessor = httpContextAccessor;
-        }
 
         public Task<ApiResult<T>> GetAsync<T>(string url)
         {
@@ -149,4 +138,3 @@ namespace Hospital_Clinic_Appointment_System.Services
             return client;
         }
     }
-}

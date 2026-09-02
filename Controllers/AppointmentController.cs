@@ -1,286 +1,277 @@
 using Hospital_Clinic_Appointment_System.Entities;
 using Hospital_Clinic_Appointment_System.Models;
-using Hospital_Clinic_Appointment_System.Repositories;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hospital_Clinic_Appointment_System.Controllers
+namespace Hospital_Clinic_Appointment_System.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize] // All endpoints require authentication by default
+public class AppointmentController(IAppointmentRepository appointmentRepository) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize] // All endpoints require authentication by default
-    public class AppointmentController : ControllerBase
+    // POST: api/Appointment/Create
+    [HttpPost("Create")]
+    [Authorize(Policy = "PatientOrAdmin")]
+    public async Task<ActionResult<AppointmentDto>> CreateAppointmentAsync([FromBody] CreateAppointmentDto createDto)
     {
-        private readonly IAppointmentRepository appointmentRepository;
-
-        public AppointmentController(IAppointmentRepository appointmentRepository)
+        var appointment = new Appointment
         {
-            this.appointmentRepository = appointmentRepository;
-        }
+            DoctorId = createDto.DoctorId,
+            PatientId = createDto.PatientId,
+            AppointmentDate = createDto.AppointmentDate,
+            Status = "Scheduled", // Always start as Scheduled
+            Reason = createDto.Reason,
+            Notes = createDto.Notes
+        };
 
-        // POST: api/Appointment/Create
-        [HttpPost("Create")]
-        [Authorize(Policy = "PatientOrAdmin")]
-        public async Task<ActionResult<AppointmentDto>> CreateAppointmentAsync([FromBody] CreateAppointmentDto createDto)
+        await appointmentRepository.AddAsync(appointment);
+        await appointmentRepository.SaveChangesAsync();
+
+        var dto = new AppointmentDto
         {
-            var appointment = new Appointment
-            {
-                DoctorId = createDto.DoctorId,
-                PatientId = createDto.PatientId,
-                AppointmentDate = createDto.AppointmentDate,
-                Status = "Scheduled", // Always start as Scheduled
-                Reason = createDto.Reason,
-                Notes = createDto.Notes
-            };
+            DoctorId = appointment.DoctorId,
+            PatientId = appointment.PatientId,
+            AppointmentDate = appointment.AppointmentDate,
+            Status = appointment.Status,
+            Reason = appointment.Reason,
+            Notes = appointment.Notes
+        };
 
-            await appointmentRepository.AddAsync(appointment);
-            await appointmentRepository.SaveChangesAsync();
+        return CreatedAtRoute("GetAppointmentById", new { id = appointment.Id }, dto);
+    }
 
-            var dto = new AppointmentDto
-            {
-                DoctorId = appointment.DoctorId,
-                PatientId = appointment.PatientId,
-                AppointmentDate = appointment.AppointmentDate,
-                Status = appointment.Status,
-                Reason = appointment.Reason,
-                Notes = appointment.Notes
-            };
+    // GET: api/Appointment/{id}
+    [HttpGet("{id}", Name = "GetAppointmentById")]
+    [Authorize] // Any authenticated user
+    public async Task<ActionResult<AppointmentDto>> GetAppointmentByIdAsync(int id)
+    {
+        var appointment = await appointmentRepository.GetByIdAsync(id);
+        if (appointment == null)
+            return NotFound();
 
-            return CreatedAtRoute("GetAppointmentById", new { id = appointment.Id }, dto);
-        }
-
-        // GET: api/Appointment/{id}
-        [HttpGet("{id}", Name = "GetAppointmentById")]
-        [Authorize] // Any authenticated user
-        public async Task<ActionResult<AppointmentDto>> GetAppointmentByIdAsync(int id)
+        var dto = new AppointmentDto
         {
-            var appointment = await appointmentRepository.GetByIdAsync(id);
-            if (appointment == null)
-                return NotFound();
+            DoctorId = appointment.DoctorId,
+            PatientId = appointment.PatientId,
+            AppointmentDate = appointment.AppointmentDate,
+            Status = appointment.Status,
+            Reason = appointment.Reason,
+            Notes = appointment.Notes,
+            ReminderSent = appointment.ReminderSent
+        };
 
-            var dto = new AppointmentDto
-            {
-                DoctorId = appointment.DoctorId,
-                PatientId = appointment.PatientId,
-                AppointmentDate = appointment.AppointmentDate,
-                Status = appointment.Status,
-                Reason = appointment.Reason,
-                Notes = appointment.Notes,
-                ReminderSent = appointment.ReminderSent
-            };
+        return Ok(dto);
+    }
 
-            return Ok(dto);
-        }
+    // GET: api/Appointment/All
+    [HttpGet("All")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<ActionResult<IEnumerable<AppointmentAdminDto>>> GetAllAppointmentsAsync()
+    {
+        var appointments = await appointmentRepository.GetAllAppointmentsWithDetailsAsync();
 
-        // GET: api/Appointment/All
-        [HttpGet("All")]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<ActionResult<IEnumerable<AppointmentAdminDto>>> GetAllAppointmentsAsync()
+        var dtos = appointments.Select(a => new AppointmentAdminDto
         {
-            var appointments = await appointmentRepository.GetAllAppointmentsWithDetailsAsync();
+            Id = a.Id,
+            DoctorId = a.DoctorId,
+            PatientId = a.PatientId,
+            DoctorName = a.doctor.user.Name,
+            PatientName = a.patient.user?.Name ?? a.patient.Name ?? string.Empty,
+            AppointmentDate = a.AppointmentDate,
+            Status = a.Status,
+            Reason = a.Reason,
+            Notes = a.Notes,
+            ReminderSent = a.ReminderSent
+        });
 
-            var dtos = appointments.Select(a => new AppointmentAdminDto
-            {
-                Id = a.Id,
-                DoctorId = a.DoctorId,
-                PatientId = a.PatientId,
-                DoctorName = a.doctor?.user?.Name ?? a.doctor?.Name ?? string.Empty,
-                PatientName = a.patient?.user?.Name ?? a.patient?.Name ?? string.Empty,
-                AppointmentDate = a.AppointmentDate,
-                Status = a.Status,
-                Reason = a.Reason,
-                Notes = a.Notes,
-                ReminderSent = a.ReminderSent
-            });
+        return Ok(dtos);
+    }
 
-            return Ok(dtos);
-        }
+    // GET: api/Appointment/Doctor/{doctorId}
+    [HttpGet("Doctor/{doctorId}")]
+    [Authorize(Policy = "DoctorOrAdmin")]
+    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByDoctorAsync(int doctorId)
+    {
+        var appointments = await appointmentRepository.GetAppointmentsByDoctorIdAsync(doctorId);
 
-        // GET: api/Appointment/Doctor/{doctorId}
-        [HttpGet("Doctor/{doctorId}")]
-        [Authorize(Policy = "DoctorOrAdmin")]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByDoctorAsync(int doctorId)
+        var dtos = appointments.Select(a => new AppointmentDto
         {
-            var appointments = await appointmentRepository.GetAppointmentsByDoctorIdAsync(doctorId);
+            DoctorId = a.DoctorId,
+            PatientId = a.PatientId,
+            AppointmentDate = a.AppointmentDate,
+            Status = a.Status,
+            Reason = a.Reason,
+            Notes = a.Notes,
+            ReminderSent = a.ReminderSent
+        });
 
-            var dtos = appointments.Select(a => new AppointmentDto
-            {
-                DoctorId = a.DoctorId,
-                PatientId = a.PatientId,
-                AppointmentDate = a.AppointmentDate,
-                Status = a.Status,
-                Reason = a.Reason,
-                Notes = a.Notes,
-                ReminderSent = a.ReminderSent
-            });
+        return Ok(dtos);
+    }
 
-            return Ok(dtos);
-        }
+    // GET: api/Appointment/Patient/{patientId}
+    [HttpGet("Patient/{patientId}")]
+    [Authorize(Policy = "PatientOrAdmin")]
+    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByPatientAsync(int patientId)
+    {
+        var appointments = await appointmentRepository.GetAppointmentsByPatientIdAsync(patientId);
 
-        // GET: api/Appointment/Patient/{patientId}
-        [HttpGet("Patient/{patientId}")]
-        [Authorize(Policy = "PatientOrAdmin")]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByPatientAsync(int patientId)
+        var dtos = appointments.Select(a => new AppointmentDto
         {
-            var appointments = await appointmentRepository.GetAppointmentsByPatientIdAsync(patientId);
+            DoctorId = a.DoctorId,
+            PatientId = a.PatientId,
+            AppointmentDate = a.AppointmentDate,
+            Status = a.Status,
+            Reason = a.Reason,
+            Notes = a.Notes,
+            ReminderSent = a.ReminderSent
+        });
 
-            var dtos = appointments.Select(a => new AppointmentDto
-            {
-                DoctorId = a.DoctorId,
-                PatientId = a.PatientId,
-                AppointmentDate = a.AppointmentDate,
-                Status = a.Status,
-                Reason = a.Reason,
-                Notes = a.Notes,
-                ReminderSent = a.ReminderSent
-            });
+        return Ok(dtos);
+    }
 
-            return Ok(dtos);
-        }
+    // GET: api/Appointment/Date/{date}
+    [HttpGet("Date/{date}")]
+    [Authorize(Policy = "DoctorOrAdmin")]
+    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByDateAsync(DateTime date)
+    {
+        var appointments = await appointmentRepository.GetAppointmentsByDateAsync(date);
 
-        // GET: api/Appointment/Date/{date}
-        [HttpGet("Date/{date}")]
-        [Authorize(Policy = "DoctorOrAdmin")]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByDateAsync(DateTime date)
+        var dtos = appointments.Select(a => new AppointmentDto
         {
-            var appointments = await appointmentRepository.GetAppointmentsByDateAsync(date);
+            DoctorId = a.DoctorId,
+            PatientId = a.PatientId,
+            AppointmentDate = a.AppointmentDate,
+            Status = a.Status,
+            Reason = a.Reason,
+            Notes = a.Notes,
+            ReminderSent = a.ReminderSent
+        });
 
-            var dtos = appointments.Select(a => new AppointmentDto
-            {
-                DoctorId = a.DoctorId,
-                PatientId = a.PatientId,
-                AppointmentDate = a.AppointmentDate,
-                Status = a.Status,
-                Reason = a.Reason,
-                Notes = a.Notes,
-                ReminderSent = a.ReminderSent
-            });
+        return Ok(dtos);
+    }
 
-            return Ok(dtos);
-        }
+    // GET: api/Appointment/Status/{status}
+    [HttpGet("Status/{status}")]
+    [Authorize(Policy = "DoctorOrAdmin")]
+    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByStatusAsync(string status)
+    {
+        var appointments = await appointmentRepository.GetAppointmentsByStatusAsync(status);
 
-        // GET: api/Appointment/Status/{status}
-        [HttpGet("Status/{status}")]
-        [Authorize(Policy = "DoctorOrAdmin")]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByStatusAsync(string status)
+        var dtos = appointments.Select(a => new AppointmentDto
         {
-            var appointments = await appointmentRepository.GetAppointmentsByStatusAsync(status);
+            DoctorId = a.DoctorId,
+            PatientId = a.PatientId,
+            AppointmentDate = a.AppointmentDate,
+            Status = a.Status,
+            Reason = a.Reason,
+            Notes = a.Notes,
+            ReminderSent = a.ReminderSent
+        });
 
-            var dtos = appointments.Select(a => new AppointmentDto
-            {
-                DoctorId = a.DoctorId,
-                PatientId = a.PatientId,
-                AppointmentDate = a.AppointmentDate,
-                Status = a.Status,
-                Reason = a.Reason,
-                Notes = a.Notes,
-                ReminderSent = a.ReminderSent
-            });
+        return Ok(dtos);
+    }
 
-            return Ok(dtos);
-        }
+    // PUT: api/Appointment/{id}
+    [HttpPut("{id}")]
+    [Authorize(Policy = "DoctorOrAdmin")]
+    public async Task<IActionResult> UpdateAppointmentAsync(int id, UpdateAppointmentDto updateAppointment)
+    {
+        var appointment = await appointmentRepository.GetByIdAsync(id);
+        if (appointment == null) return NotFound();
 
-        // PUT: api/Appointment/{id}
-        [HttpPut("{id}")] // Put : api/Appointment/{id}
-        [Authorize(Policy = "DoctorOrAdmin")]
-        public async Task<IActionResult> UpdateAppointmentAsync(int id, UpdateAppointmentDto updateAppointment)
+        appointment.DoctorId = updateAppointment.DoctorId;
+        appointment.PatientId = updateAppointment.PatientId;
+        appointment.AppointmentDate = updateAppointment.AppointmentDate;
+        appointment.Status = updateAppointment.Status;
+        appointment.Reason = updateAppointment.Reason;
+        appointment.Notes = updateAppointment.Notes;
+
+        appointmentRepository.Update(appointment);
+        await appointmentRepository.SaveChangesAsync();
+        return NoContent();
+    }
+
+    // POST: api/Appointment/{id}/Cancel
+    [HttpPost("{id}/Cancel")]
+    [Authorize] // Patient or Doctor can cancel
+    public async Task<ActionResult> CancelAppointmentAsync(int id)
+    {
+        var result = await appointmentRepository.CancelAppointmentAsync(id);
+        if (!result)
+            return NotFound(new { Message = "Appointment not found" });
+
+        return Ok(new { Message = "Appointment cancelled successfully" });
+    }
+
+    // POST: api/Appointment/{id}/Complete
+    [HttpPost("{id}/Complete")]
+    [Authorize(Policy = "DoctorOrAdmin")]
+    public async Task<ActionResult> CompleteAppointmentAsync(int id, [FromBody] string? notes = null)
+    {
+        var result = await appointmentRepository.CompleteAppointmentAsync(id, notes);
+        if (!result)
+            return NotFound(new { Message = "Appointment not found" });
+
+        return Ok(new { Message = "Appointment completed successfully" });
+    }
+
+    // POST: api/Appointment/{id}/NoShow
+    [HttpPost("{id}/NoShow")]
+    [Authorize(Policy = "DoctorOrAdmin")]
+    public async Task<ActionResult> MarkAsNoShowAsync(int id)
+    {
+        var result = await appointmentRepository.MarkAsNoShowAsync(id);
+        if (!result)
+            return NotFound(new { Message = "Appointment not found" });
+
+        return Ok(new { Message = "Appointment marked as No-Show" });
+    }
+
+    // POST: api/Appointment/{id}/Reschedule
+    [HttpPost("{id}/Reschedule")]
+    [Authorize] // Patient or Doctor can reschedule
+    public async Task<ActionResult> RescheduleAppointmentAsync(int id, [FromBody] RescheduleAppointmentDto? dto)
+    {
+        if (dto == null || dto.NewAppointmentDate == default)
+            return BadRequest(new { Message = "New appointment date is required" });
+
+        var success = await appointmentRepository.RescheduleNewAppointmentAsync(id, dto.NewAppointmentDate);
+        if (!success)
+            return NotFound(new { Message = "Appointment not found" });
+
+        return Ok(new
         {
-            var appointment = await appointmentRepository.GetByIdAsync(id);
-            if (appointment == null) return NotFound();
+            Message = "Appointment rescheduled successfully",
+            NewDate = dto.NewAppointmentDate
+        });
+    }
 
-            appointment.DoctorId = updateAppointment.DoctorId;
-            appointment.PatientId = updateAppointment.PatientId;
-            appointment.AppointmentDate = updateAppointment.AppointmentDate;
-            appointment.Status = updateAppointment.Status;
-            appointment.Reason = updateAppointment.Reason;
-            appointment.Notes = updateAppointment.Notes;
+    // POST: api/Appointment/{id}/SendReminder
+    [HttpPost("{id}/SendReminder")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<ActionResult> SendReminderAsync(int id)
+    {
+        var result = await appointmentRepository.MarkReminderAsSentAsync(id);
+        if (!result)
+            return NotFound(new { Message = "Appointment not found" });
 
-            appointmentRepository.Update(appointment);
-            await appointmentRepository.SaveChangesAsync();
-            return NoContent();
-        }
+        return Ok(new { Message = "Reminder sent successfully" });
+    }
 
-        // POST: api/Appointment/{id}/Cancel
-        [HttpPost("{id}/Cancel")]
-        [Authorize] // Patient or Doctor can cancel
-        public async Task<ActionResult> CancelAppointmentAsync(int id)
-        {
-            var result = await appointmentRepository.CancelAppointmentAsync(id);
-            if (!result)
-                return NotFound(new { Message = "Appointment not found" });
+    // DELETE: api/Appointment/{id}
+    [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> DeleteAppointmentAsync(int id)
+    {
+        var appointment = await appointmentRepository.GetByIdAsync(id);
+        if (appointment == null)
+            return NotFound();
 
-            return Ok(new { Message = "Appointment cancelled successfully" });
-        }
+        appointmentRepository.Delete(appointment);
+        await appointmentRepository.SaveChangesAsync();
 
-        // POST: api/Appointment/{id}/Complete
-        [HttpPost("{id}/Complete")]
-        [Authorize(Policy = "DoctorOrAdmin")]
-        public async Task<ActionResult> CompleteAppointmentAsync(int id, [FromBody] string? notes = null)
-        {
-            var result = await appointmentRepository.CompleteAppointmentAsync(id, notes);
-            if (!result)
-                return NotFound(new { Message = "Appointment not found" });
-
-            return Ok(new { Message = "Appointment completed successfully" });
-        }
-
-        // POST: api/Appointment/{id}/NoShow
-        [HttpPost("{id}/NoShow")]
-        [Authorize(Policy = "DoctorOrAdmin")]
-        public async Task<ActionResult> MarkAsNoShowAsync(int id)
-        {
-            var result = await appointmentRepository.MarkAsNoShowAsync(id);
-            if (!result)
-                return NotFound(new { Message = "Appointment not found" });
-
-            return Ok(new { Message = "Appointment marked as No-Show" });
-        }
-
-        // POST: api/Appointment/{id}/Reschedule
-        [HttpPost("{id}/Reschedule")]
-        [Authorize] // Patient or Doctor can reschedule
-        public async Task<ActionResult> RescheduleAppointmentAsync(int id, [FromBody] RescheduleAppointmentDto dto)
-        {
-            if (dto == null || dto.NewAppointmentDate == default)
-                return BadRequest(new { Message = "New appointment date is required" });
-
-            var success = await appointmentRepository.RescheduleNewAppointmentAsync(id, dto.NewAppointmentDate);
-            if (!success)
-                return NotFound(new { Message = "Appointment not found" });
-
-            return Ok(new
-            {
-                Message = "Appointment rescheduled successfully",
-                NewDate = dto.NewAppointmentDate
-            });
-        }
-
-        // POST: api/Appointment/{id}/SendReminder
-        [HttpPost("{id}/SendReminder")]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<ActionResult> SendReminderAsync(int id)
-        {
-            var result = await appointmentRepository.MarkReminderAsSentAsync(id);
-            if (!result)
-                return NotFound(new { Message = "Appointment not found" });
-
-            return Ok(new { Message = "Reminder sent successfully" });
-        }
-
-        // DELETE: api/Appointment/{id}
-        [HttpDelete("{id}")]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> DeleteAppointmentAsync(int id)
-        {
-            var appointment = await appointmentRepository.GetByIdAsync(id);
-            if (appointment == null)
-                return NotFound();
-
-            appointmentRepository.Delete(appointment);
-            await appointmentRepository.SaveChangesAsync();
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

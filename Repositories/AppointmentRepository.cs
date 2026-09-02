@@ -1,167 +1,123 @@
-﻿using Hospital_Clinic_Appointment_System.App_Context;
+using Hospital_Clinic_Appointment_System.App_Context;
 using Hospital_Clinic_Appointment_System.Entities;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hospital_Clinic_Appointment_System.Repositories
+namespace Hospital_Clinic_Appointment_System.Repositories;
+
+public class AppointmentRepository(DBContext context) : GenericRepository<Appointment>(context), IAppointmentRepository
 {
-    public class AppointmentRepository : GenericRepository<Appointment>, IAppointmentRepository
+    public Task<IEnumerable<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId)
     {
-        private readonly DBContext context;
-        public AppointmentRepository(DBContext context) : base(context)
+        return _context.Appointments
+            .Where(a => a.DoctorId == doctorId)
+            .ToListAsync()
+            .ContinueWith(t => t.Result.AsEnumerable());
+    }
+
+    public Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId)
+    {
+        return _context.Appointments
+            .Where(a => a.PatientId == patientId)
+            .ToListAsync()
+            .ContinueWith(t => t.Result.AsEnumerable());
+    }
+
+    public Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date)
+    {
+        return _context.Appointments
+            .Where(a => a.AppointmentDate.Date == date.Date)
+            .ToListAsync()
+            .ContinueWith(t => t.Result.AsEnumerable());
+    }
+
+    public Task<IEnumerable<Appointment>> GetAppointmentsByStatusAsync(string status)
+    {
+        return _context.Appointments
+            .Where(a => a.Status == status)
+            .ToListAsync()
+            .ContinueWith(t => t.Result.AsEnumerable());
+    }
+
+
+    public Task<IEnumerable<Appointment>> GetAllAppointmentsWithDetailsAsync()
+    {
+        return _context.Appointments
+            .Include(a => a.doctor)
+                .ThenInclude(d => d.user)
+            .Include(a => a.patient)
+                .ThenInclude(p => p.user)
+            .ToListAsync()
+            .ContinueWith(t => t.Result.AsEnumerable());
+    }
+
+    public async Task<bool> CancelAppointmentAsync(int appointmentId)
+    {
+        var appointment = await _context.Appointments.FindAsync(appointmentId);
+        if (appointment == null)
         {
-            this.context = context;
+            return false;
         }
+        appointment.Status = "Cancelled";
+        _context.Appointments.Update(appointment);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId)
+    public async Task<bool> CompleteAppointmentAsync(int appointmentId, string? notes = null)
+    {
+        var appointment = await _context.Appointments.FindAsync(appointmentId);
+        if (appointment == null)
         {
-            return await context.Appointments
-                .Where(a => a.DoctorId == doctorId)
-                .ToListAsync();
-
+            return false;
         }
-
-
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId) 
+        appointment.Status = "Completed";
+        if (!string.IsNullOrEmpty(notes))
         {
-            return await context.Appointments
-                .Where(a => a.PatientId == patientId)
-                .ToListAsync();
-
-
+            appointment.Notes = notes;
         }
+        _context.Appointments.Update(appointment);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date) 
+    public async Task<bool> MarkAsNoShowAsync(int appointmentId)
+    {
+        var appointment = await _context.Appointments.FindAsync(appointmentId);
+        if (appointment == null || appointment.Status == "Completed")
         {
-            return await context.Appointments
-                .Where(a => a.AppointmentDate.Date == date.Date)
-                .ToListAsync();
+            return false;
         }
+        appointment.Status = "No-Show";
+        _context.Appointments.Update(appointment);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
-
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByStatusAsync(string status) 
+    public async Task<bool> RescheduleNewAppointmentAsync(int appointmentId, DateTime newAppointmentDate)
+    {
+        var appointment = await _context.Appointments.FindAsync(appointmentId);
+        if (appointment == null || appointment.Status == "Completed")
         {
-            return await context.Appointments
-                .Where(a => a.Status == status)
-                .ToListAsync();
+            return false;
         }
+        appointment.AppointmentDate = newAppointmentDate;
+        _context.Appointments.Update(appointment);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
-        public async Task<IEnumerable<Appointment>> GetTodaysAppointmentsAsync(int doctorId) 
+
+    public async Task<bool> MarkReminderAsSentAsync(int appointmentId)
+    {
+        var appointment = await _context.Appointments.FindAsync(appointmentId);
+        if (appointment == null)
         {
-            var today = DateTime.Today;
-
-            return await context.Appointments
-                .Where(a => a.DoctorId == doctorId && a.AppointmentDate.Date == today)
-                .ToListAsync();
-
-
+            return false;
         }
-
-        public async Task<IEnumerable<Appointment>> GetThisWeekAppointmentsAsync() 
-        {
-            var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
-            var endOfWeek = startOfWeek.AddDays(7);
-            return await context.Appointments
-                .Where(a => a.AppointmentDate.Date >= startOfWeek && a.AppointmentDate.Date < endOfWeek)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Appointment>> GetAllAppointmentsWithDetailsAsync()
-        {
-            return await context.Appointments
-                .Include(a => a.doctor)
-                    .ThenInclude(d => d.user)
-                .Include(a => a.patient)
-                    .ThenInclude(p => p.user)
-                .ToListAsync();
-        }
-
-        public async Task<bool> CancelAppointmentAsync(int appointmentId) 
-        {
-            var appointment = await context.Appointments.FindAsync(appointmentId);
-            if (appointment == null)
-            {
-                return false;
-            }
-            appointment.Status = "Cancelled";
-            context.Appointments.Update(appointment);
-            await context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> CompleteAppointmentAsync(int appointmentId, string? notes = null) 
-        {
-            var appointment = await context.Appointments.FindAsync(appointmentId);
-            if (appointment == null)
-            {
-                return false;
-            }
-            appointment.Status = "Completed";
-            if (!string.IsNullOrEmpty(notes))
-            {
-                appointment.Notes = notes;
-            }
-            context.Appointments.Update(appointment);
-            await context.SaveChangesAsync();
-            return true;
-
-
-        }
-
-
-        public async Task<bool> MarkAsNoShowAsync(int appointmentId) 
-        {
-            var appointment = await context.Appointments.FindAsync(appointmentId);
-            if (appointment == null || appointment.Status == "Completed" )
-            {
-                return false;
-            }
-            appointment.Status = "No-Show";
-            context.Appointments.Update(appointment);
-            await context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> RescheduleNewAppointmentAsync(int appointmentId, DateTime newAppointmentDate) 
-        {
-            var appointment = context.Appointments.Find(appointmentId);
-            if (appointment == null || appointment.Status == "Completed")
-            {
-                return false;
-            }
-            appointment.AppointmentDate = newAppointmentDate;
-            context.Appointments.Update(appointment);
-            await  context.SaveChangesAsync().ContinueWith(t => t.IsCompletedSuccessfully);
-            return true;
-        }
-
-
-        public async Task<int> DeleteOldCancelledAppointmentsAsync(DateTime beforeDate) 
-        {
-            var oldCancelledAppointments = await context.Appointments
-                .Where(a => a.Status == "Cancelled" && a.AppointmentDate < beforeDate)
-                .ToListAsync();
-            context.Appointments.RemoveRange(oldCancelledAppointments);
-            await context.SaveChangesAsync();
-            return oldCancelledAppointments.Count;
-
-        }
-
-        public async Task<bool> MarkReminderAsSentAsync(int appointmentId) 
-        {
-            var appointment = await context.Appointments.FindAsync(appointmentId);
-            if (appointment == null)
-            {
-                return false;
-            }
-            appointment.ReminderSent = true;
-            context.Appointments.Update(appointment);
-            await context.SaveChangesAsync();
-            return true;
-
-
-        }
-
-        
+        appointment.ReminderSent = true;
+        _context.Appointments.Update(appointment);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }

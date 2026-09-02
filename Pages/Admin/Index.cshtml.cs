@@ -4,20 +4,16 @@ using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hospital_Clinic_Appointment_System.Pages.Admin
-{
-    [Authorize(Roles = "Admin")]
-    public class IndexModel : AuthenticatedPageModel
-    {
-        public IndexModel(IApiClient apiClient) : base(apiClient)
-        {
-        }
+namespace Hospital_Clinic_Appointment_System.Pages.Admin;
 
-        public int UsersCount { get; private set; }
-        public int DoctorsCount { get; private set; }
-        public int PatientsCount { get; private set; }
-        public int AppointmentsCount { get; private set; }
-        public List<AppointmentAdminDto> RecentAppointments { get; private set; } = new();
+[Authorize(Roles = "Admin")]
+public class IndexModel(IApiClient apiClient) : AuthenticatedPageModel(apiClient)
+{
+    public int UsersCount { get; private set; }
+    public int DoctorsCount { get; private set; }
+    public int PatientsCount { get; private set; }
+    public int AppointmentsCount { get; private set; }
+    public List<AppointmentAdminDto> RecentAppointments { get; private set; } = [];
         public string? ErrorMessage { get; private set; }
 
         public async Task<IActionResult> OnGetAsync()
@@ -42,9 +38,8 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
             RecentAppointments = appointmentsResult.Data?
                 .OrderByDescending(a => a.AppointmentDate)
                 .Take(8)
-                .ToList() ?? new List<AppointmentAdminDto>();
+                .ToList() ?? [];
 
             return Page();
         }
     }
-}

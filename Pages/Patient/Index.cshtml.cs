@@ -4,17 +4,13 @@ using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Hospital_Clinic_Appointment_System.Pages.Patient
-{
-    [Authorize(Roles = "Patient")]
-    public class IndexModel : AuthenticatedPageModel
-    {
-        public IndexModel(IApiClient apiClient) : base(apiClient)
-        {
-        }
+namespace Hospital_Clinic_Appointment_System.Pages.Patient;
 
-        public PatientShortDto? Patient { get; private set; }
-        public List<AppointmentShortDto> Appointments { get; private set; } = new();
+[Authorize(Roles = "Patient")]
+public class IndexModel(IApiClient apiClient) : AuthenticatedPageModel(apiClient)
+{
+    public PatientShortDto? Patient { get; private set; }
+    public List<AppointmentShortDto> Appointments { get; private set; } = [];
         public string? ErrorMessage { get; private set; }
 
         public async Task<IActionResult> OnGetAsync()
@@ -31,7 +27,7 @@ namespace Hospital_Clinic_Appointment_System.Pages.Patient
             var appointmentsResult = await ApiClient.GetAsync<List<AppointmentShortDto>>($"/api/Patient/{Patient.Id}/Appointments");
             if (appointmentsResult.Success && appointmentsResult.Data != null)
             {
-                Appointments = appointmentsResult.Data.OrderBy(a => a.AppointmentDate).Take(10).ToList();
+                Appointments = [.. appointmentsResult.Data.OrderBy(a => a.AppointmentDate).Take(10)];
             }
             else if (!appointmentsResult.Success)
             {
@@ -41,4 +37,3 @@ namespace Hospital_Clinic_Appointment_System.Pages.Patient
             return Page();
         }
     }
-}

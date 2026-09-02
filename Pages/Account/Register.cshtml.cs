@@ -8,17 +8,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Hospital_Clinic_Appointment_System.Pages.Account
-{
-    public class RegisterModel : PageModel
-    {
-        private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
-        private readonly IApiClient apiClient;
+namespace Hospital_Clinic_Appointment_System.Pages.Account;
 
-        public RegisterModel(IApiClient apiClient)
-        {
-            this.apiClient = apiClient;
-        }
+public class RegisterModel(IApiClient apiClient) : PageModel
+{
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
         [BindProperty]
         public RegisterDto Register { get; set; } = new();
@@ -69,27 +63,27 @@ namespace Hospital_Clinic_Appointment_System.Pages.Account
                 // Create Native Cookie Authentication
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, response.User.Name ?? response.User.Email ?? "User"),
-                    new Claim(ClaimTypes.NameIdentifier, response.User.Id.ToString()),
-                    new Claim(ClaimTypes.Email, response.User.Email ?? "")
+                    new(ClaimTypes.Name, string.IsNullOrWhiteSpace(response.User.Name) ? (string.IsNullOrWhiteSpace(response.User.Email) ? "User" : response.User.Email) : response.User.Name),
+                    new(ClaimTypes.NameIdentifier, response.User.Id.ToString()),
+                    new(ClaimTypes.Email, response.User.Email)
                 };
 
-                if (response.User.Roles != null)
+                if (response.User.Roles.Count > 0)
                 {
                     foreach (var role in response.User.Roles)
                     {
-                        claims.Add(new Claim(ClaimTypes.Role, role));
+                        claims.Add(new(ClaimTypes.Role, role));
                     }
                 }
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
-                
+
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             }
         }
 
-        private IActionResult RedirectToDashboard(UserInfoDto? userInfo)
+        private RedirectToPageResult RedirectToDashboard(UserInfoDto? userInfo)
         {
             var roles = userInfo?.Roles ?? [];
             if (roles.Contains("Admin", StringComparer.OrdinalIgnoreCase))
@@ -139,4 +133,3 @@ namespace Hospital_Clinic_Appointment_System.Pages.Account
             return result.Error;
         }
     }
-}

@@ -1,19 +1,16 @@
+using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Pages.Shared;
 using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hospital_Clinic_Appointment_System.Pages.Admin
-{
-    [Authorize(Roles = "Admin")]
-    public class UsersModel : AuthenticatedPageModel
-    {
-        public UsersModel(IApiClient apiClient) : base(apiClient)
-        {
-        }
+namespace Hospital_Clinic_Appointment_System.Pages.Admin;
 
-        public List<UserDto> Users { get; private set; } = new();
+[Authorize(Roles = "Admin")]
+public class UsersModel(IApiClient apiClient, IUserRepository userRepository) : AuthenticatedPageModel(apiClient)
+{
+    public List<UserDto> Users { get; private set; } = [];
 
         [BindProperty]
         public UpdateUserDto UpdateUser { get; set; } = new();
@@ -36,7 +33,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnPostUpdateAsync()
         {
-
             if (!ModelState.IsValid)
             {
                 ErrorMessage = "Please review the user details and try again.";
@@ -44,9 +40,35 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
                 return Page();
             }
 
-            var result = await ApiClient.PutAsync($"/api/User/{UpdateUserId}", UpdateUser);
-            StatusMessage = result.Success ? "User updated successfully." : null;
-            ErrorMessage = result.Success ? null : result.Error ?? "Unable to update user.";
+            try
+            {
+                var user = await userRepository.GetByIdAsync(UpdateUserId);
+                if (user != null)
+                {
+                    user.Name = UpdateUser.Name;
+                    var existingUser = await userRepository.GetUserByEmailAsync(UpdateUser.Email);
+                    if (existingUser != null && existingUser.Id != UpdateUserId)
+                    {
+                        ErrorMessage = "Email already exists.";
+                    }
+                    else
+                    {
+                        user.Email = UpdateUser.Email;
+                        user.Phone_Number = UpdateUser.Phone_Number;
+                        userRepository.Update(user);
+                        await userRepository.SaveChangesAsync();
+                        StatusMessage = "User updated successfully.";
+                    }
+                }
+                else
+                {
+                    ErrorMessage = "Unable to find user.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Unable to update user: " + ex.Message;
+            }
 
             await LoadUsersAsync();
             return Page();
@@ -54,10 +76,24 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-
-            var result = await ApiClient.DeleteAsync($"/api/User/{DeleteUserId}");
-            StatusMessage = result.Success ? "User deleted successfully." : null;
-            ErrorMessage = result.Success ? null : result.Error ?? "Unable to delete user.";
+            try
+            {
+                var user = await userRepository.GetByIdAsync(DeleteUserId);
+                if (user != null)
+                {
+                    userRepository.Delete(user);
+                    await userRepository.SaveChangesAsync();
+                    StatusMessage = "User deleted successfully.";
+                }
+                else
+                {
+                    ErrorMessage = "Unable to find user.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Unable to delete user: " + ex.Message;
+            }
 
             await LoadUsersAsync();
             return Page();
@@ -65,15 +101,20 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         private async Task LoadUsersAsync()
         {
-            var result = await ApiClient.GetAsync<List<UserDto>>("/api/User/All");
-            if (result.Success && result.Data != null)
+            try
             {
-                Users = result.Data;
+                var allUsers = await userRepository.GetAllWithIncludesAsync();
+                Users = allUsers.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = u.Email,
+                    Phone_Number = u.Phone_Number
+                }).ToList();
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage = result.Error ?? "Unable to load users.";
+                ErrorMessage = "Unable to load users: " + ex.Message;
             }
         }
     }
-}

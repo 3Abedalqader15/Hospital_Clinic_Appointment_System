@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="MediClinic - Hospital and Clinic Appointment Management System" />
+    <meta name="description" content="MediClinic - Healthcare Website Design" />
     <title>@ViewData["Title"] - MediClinic</title>
 
     <!-- Bootstrap CSS -->
@@ -13,9 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
 
     <!-- Modern CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -31,118 +29,127 @@
         var isPatient = Context.User?.IsInRole("Patient") == true;
         var dashboardPage = isAdmin ? "/Admin/Index" : isDoctor ? "/Doctor/Index" : isPatient ? "/Patient/Index" : "/Index";
         var isLandingPage = ViewData["IsLandingPage"] as bool? == true;
-        var navbarClass = isLandingPage ? "navbar-landing" : "mediClinic-navbar";
     }
-    <!-- Navigation Bar -->
-    <header class="mediClinic-header">
-        <nav class="navbar navbar-expand-lg navbar-dark @navbarClass sticky-top">
-            <div class="container-fluid px-4">
+
+    <!-- ======= Top Bar ======= -->
+    <div id="topbar" class="d-flex align-items-center fixed-top">
+        <div class="container d-flex justify-content-between">
+            <div class="contact-info d-flex align-items-center">
+                <i class="fas fa-envelope d-flex align-items-center"><span class="ms-2">contact@mediclinic.com</span></i>
+                <i class="fas fa-phone-alt d-flex align-items-center ms-4"><span class="ms-2">+1 5589 55488 55</span></i>
+            </div>
+            <div class="social-links d-none d-md-flex align-items-center">
+                <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======= Header ======= -->
+    <header class="mediClinic-header fixed-top" style="top: 40px;">
+        <nav class="navbar navbar-expand-lg navbar-clinic">
+            <div class="container">
                 <!-- Brand Logo -->
                 <a class="navbar-brand mediClinic-brand" asp-area="" asp-page="/Index" title="MediClinic Home">
-                    <div class="brand-wrapper">
-                        <div class="brand-icon-box">
-                            <i class="fas fa-hospital-user"></i>
+                    <div class="brand-wrapper d-flex align-items-center">
+                        <div class="brand-icon-box" style="color: var(--clinic-primary); font-size: 1.8rem;">
+                            <i class="fas fa-heartbeat"></i>
                         </div>
-                        <div class="brand-text">
-                            <span class="brand-name">Medi</span><span class="brand-accent">Clinic</span>
+                        <div class="brand-text ms-2">
+                            <span class="brand-name fw-bold" style="color: #2c4964; font-size: 1.5rem; letter-spacing: 1px;">Medi</span><span class="brand-accent fw-bold" style="color: var(--clinic-primary); font-size: 1.5rem; letter-spacing: 1px;">Clinic</span>
                         </div>
                     </div>
                 </a>
 
                 <!-- Mobile Toggle -->
-                <button class="navbar-toggler mediClinic-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
-                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation" style="border: none; color: var(--clinic-primary);">
+                    <i class="fas fa-bars fa-lg"></i>
                 </button>
 
                 <!-- Navigation Menu -->
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav ms-auto align-items-lg-center">
                         <li class="nav-item">
-                            <a class="nav-link mediClinic-nav-link" asp-area="" asp-page="/Index">
-                                <i class="fas fa-home me-2"></i>Home
-                            </a>
+                            <a class="nav-link fw-semibold px-3" style="color: #2c4964;" asp-area="" asp-page="/Index">Home</a>
                         </li>
+                        
                         @if (isAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link mediClinic-nav-link" asp-page="@dashboardPage">
-                                    <i class="fas fa-chart-line me-2"></i>Dashboard
-                                </a>
+                                <a class="nav-link fw-semibold px-3" style="color: #2c4964;" asp-page="@dashboardPage">Dashboard</a>
                             </li>
                         }
+                        
                         @if (isAdmin)
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link mediClinic-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-tools me-2"></i>Admin
+                                <a class="nav-link fw-semibold px-3 dropdown-toggle" style="color: #2c4964;" href="#" role="button" data-bs-toggle="dropdown">
+                                    Admin
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" asp-page="/Admin/Index">Overview</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Admin/Users">Users</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Admin/Doctors">Doctors</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Admin/Patients">Patients</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Admin/Appointments">Appointments</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Admin/TimeSlots">Time Slots</a></li>
+                                <ul class="dropdown-menu shadow-sm border-0 mt-2">
+                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Index">Overview</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Users">Users</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Doctors">Doctors</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Patients">Patients</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Appointments">Appointments</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Admin/TimeSlots">Time Slots</a></li>
                                 </ul>
                             </li>
                         }
                         @if (isDoctor)
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link mediClinic-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user-md me-2"></i>Doctor
+                                <a class="nav-link fw-semibold px-3 dropdown-toggle" style="color: #2c4964;" href="#" role="button" data-bs-toggle="dropdown">
+                                    Doctor Portal
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" asp-page="/Doctor/Index">Overview</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Doctor/Appointments">Appointments</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Doctor/TimeSlots">Time Slots</a></li>
+                                <ul class="dropdown-menu shadow-sm border-0 mt-2">
+                                    <li><a class="dropdown-item py-2" asp-page="/Doctor/Index">Overview</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Doctor/Appointments">Appointments</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Doctor/TimeSlots">Time Slots</a></li>
                                 </ul>
                             </li>
                         }
                         @if (isPatient)
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link mediClinic-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user-injured me-2"></i>Patient
+                                <a class="nav-link fw-semibold px-3 dropdown-toggle" style="color: #2c4964;" href="#" role="button" data-bs-toggle="dropdown">
+                                    Patient Portal
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" asp-page="/Patient/Index">Overview</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Patient/Doctors">Doctors</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Patient/Appointments">Appointments</a></li>
+                                <ul class="dropdown-menu shadow-sm border-0 mt-2">
+                                    <li><a class="dropdown-item py-2" asp-page="/Patient/Index">Overview</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Patient/Doctors">Doctors</a></li>
+                                    <li><a class="dropdown-item py-2" asp-page="/Patient/Appointments">Appointments</a></li>
                                 </ul>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link mediClinic-nav-link" asp-area="" asp-page="/Privacy">
-                                <i class="fas fa-shield-alt me-2"></i>Privacy
-                            </a>
-                        </li>
+
                         @if (!isAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link mediClinic-nav-link @(isLandingPage ? "btn-nav-login" : "")" asp-page="/Account/Login">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Login
-                                </a>
-                            </li>
-                            <li class="nav-item ms-lg-2">
-                                <a class="nav-link mediClinic-nav-link @(isLandingPage ? "btn-nav-signup" : "")" asp-page="/Account/Register">
-                                    <i class="fas fa-user-plus me-2"></i>Register
+                            <li class="nav-item ms-lg-3">
+                                <a class="btn btn-primary rounded-pill px-4 py-2" style="background: var(--clinic-primary); border: none;" asp-page="/Account/Login">
+                                    Make an Appointment
                                 </a>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item d-flex align-items-center text-white px-3">
-                                <i class="fas fa-user-circle me-2"></i>@(Context.User?.Identity?.Name ?? "User")
-                            </li>
-                            <li class="nav-item">
-                                <form method="post" action="/Account/Logout" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-light">
-                                        <i class="fas fa-sign-out-alt me-1"></i>Logout
-                                    </button>
-                                </form>
+                            <li class="nav-item ms-lg-3 dropdown">
+                                <a class="btn btn-outline-primary rounded-pill px-4 py-2 dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-2"></i>@(Context.User?.Identity?.Name ?? "User")
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                                    <li>
+                                        <form method="post" action="/Account/Logout" class="m-0">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item text-danger py-2">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         }
                     </ul>
@@ -152,54 +159,80 @@
     </header>
 
     <!-- Main Content -->
-    <main role="main" class="mediClinic-main">
-        <div class="container-fluid px-4">
+    <main role="main" class="mediClinic-main" style="margin-top: 120px; min-height: 70vh;">
+        <div class="container pb-5">
             @RenderBody()
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="mediClinic-footer">
-        <div class="container-fluid px-4">
-            <div class="row py-5">
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <div class="footer-section">
-                        <h6 class="text-white fw-bold mb-3">
-                            <i class="fas fa-hospital-user me-2 text-accent"></i>MediClinic
-                        </h6>
-                        <p class="text-muted-light small">Providing quality healthcare appointment management services for modern clinics and hospitals.</p>
+    <!-- ======= Footer ======= -->
+    <footer id="footer" style="background: #f1f7fd; color: #444444; font-size: 14px; position: relative;">
+        <div class="footer-top border-top py-5" style="border-color: #d6eaff !important;">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-3 col-md-6 footer-contact">
+                        <h3 class="fw-bold mb-4" style="color: #2c4964; font-size: 24px;">MediClinic</h3>
+                        <p class="mb-0 text-secondary">
+                            A108 Adam Street <br>
+                            New York, NY 535022<br>
+                            United States <br><br>
+                            <strong>Phone:</strong> +1 5589 55488 55<br>
+                            <strong>Email:</strong> info@example.com<br>
+                        </p>
                     </div>
-                </div>
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <div class="footer-section">
-                        <h6 class="text-white fw-bold mb-3">
-                            <i class="fas fa-link me-2 text-accent"></i>Quick Links
-                        </h6>
-                        <ul class="list-unstyled small">
-                            <li class="mb-2"><a asp-area="" asp-page="/Index" class="text-muted-light footer-link">Home</a></li>
-                            <li class="mb-2"><a asp-area="" asp-page="/Privacy" class="text-muted-light footer-link">Privacy Policy</a></li>
+
+                    <div class="col-lg-2 col-md-6 footer-links mt-4 mt-md-0">
+                        <h4 class="fw-bold mb-4" style="color: #2c4964; font-size: 16px;">Useful Links</h4>
+                        <ul class="list-unstyled">
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a asp-page="/Index" class="text-decoration-none text-secondary">Home</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">About us</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Services</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Terms of service</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a asp-page="/Privacy" class="text-decoration-none text-secondary">Privacy policy</a></li>
                         </ul>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="footer-section">
-                        <h6 class="text-white fw-bold mb-3">
-                            <i class="fas fa-phone me-2 text-accent"></i>Contact Us
-                        </h6>
-                        <p class="text-muted-light small mb-2">
-                            <i class="fas fa-phone me-2"></i>+1 (555) 123-4567
-                        </p>
-                        <p class="text-muted-light small mb-0">
-                            <i class="fas fa-envelope me-2"></i>info@mediClinic.com
-                        </p>
+
+                    <div class="col-lg-3 col-md-6 footer-links mt-4 mt-lg-0">
+                        <h4 class="fw-bold mb-4" style="color: #2c4964; font-size: 16px;">Our Services</h4>
+                        <ul class="list-unstyled">
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">General Practice</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Cardiology</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Neurology</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Pediatrics</a></li>
+                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Dental Care</a></li>
+                        </ul>
                     </div>
+
+                    <div class="col-lg-4 col-md-6 footer-newsletter mt-4 mt-lg-0">
+                        <h4 class="fw-bold mb-4" style="color: #2c4964; font-size: 16px;">Join Our Newsletter</h4>
+                        <p class="text-secondary">Subscribe to our newsletter to receive the latest health news and tips directly to your inbox.</p>
+                        <form action="" method="post" class="d-flex mt-4 bg-white p-1 rounded-pill" style="box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.08);">
+                            <input type="email" name="email" class="form-control border-0 bg-transparent shadow-none" placeholder="Enter your email" style="padding-left: 15px;">
+                            <input type="submit" value="Subscribe" class="btn btn-primary rounded-pill px-4" style="background: var(--clinic-primary); border: none;">
+                        </form>
+                    </div>
+
                 </div>
             </div>
-            <div class="footer-divider"></div>
-            <div class="py-3">
-                <p class="text-center text-muted-light small mb-0">
-                    &copy; <span id="year">2026</span> MediClinic Appointment System. All rights reserved. | Designed with <i class="fas fa-heart text-danger"></i> for healthcare excellence.
-                </p>
+        </div>
+
+        <div class="container d-md-flex py-4" style="background: #e6f2fb; border-top: 1px solid #d6eaff; max-width: 100%;">
+            <div class="container d-md-flex">
+                <div class="me-md-auto text-center text-md-start">
+                    <div class="copyright text-secondary">
+                        &copy; Copyright <strong><span style="color: #2c4964;">MediClinic</span></strong>. All Rights Reserved
+                    </div>
+                    <div class="credits mt-1 pt-1" style="font-size: 13px;">
+                        Designed with <i class="fas fa-heart text-danger"></i> for Healthcare Excellence
+                    </div>
+                </div>
+                <div class="social-links text-center text-md-right pt-3 pt-md-0 d-flex gap-2">
+                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-linkedin-in"></i></a>
+                </div>
             </div>
         </div>
     </footer>
@@ -208,9 +241,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

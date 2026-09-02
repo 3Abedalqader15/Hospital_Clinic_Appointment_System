@@ -4,11 +4,11 @@
    ============================================ */
 
 :root {
-  /* Primary Colors */
-  --clinic-primary: #0b6efd;
-  --clinic-primary-dark: #095ed6;
-  --clinic-accent: #00b894;
-  --clinic-accent-light: #4cd964;
+  /* Clinic Template Primary Colors */
+  --clinic-primary: #1977cc;
+  --clinic-primary-dark: #166ab5;
+  --clinic-accent: #3291e6;
+  --clinic-accent-light: #73b3ef;
 
   /* Neutral Colors */
   --clinic-muted: #6c757d;
@@ -193,22 +193,59 @@ a:focus-visible {
 }
 
 /* ============================================
-   NAVBAR & HEADER
+   TOPBAR & NAVBAR (ThemeWagon Clinic Style)
    ============================================ */
 
+#topbar {
+  background: #fff;
+  height: 40px;
+  font-size: 14px;
+  transition: all 0.5s;
+  z-index: 1024;
+  border-bottom: 1px solid #e6f2fb;
+}
+
+#topbar .contact-info i {
+  font-style: normal;
+  color: var(--clinic-primary);
+  line-height: 0;
+  margin-right: 5px;
+}
+
+#topbar .contact-info i span {
+  color: var(--clinic-text-light);
+  font-style: normal;
+}
+
+#topbar .social-links a {
+  color: #6c757d;
+  line-height: 0;
+  transition: 0.3s;
+  margin-left: 15px;
+}
+
+#topbar .social-links a:hover {
+  color: var(--clinic-primary);
+}
+
 .navbar-clinic {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(11, 110, 253, 0.08);
-  box-shadow: var(--clinic-shadow-sm);
-  padding: 0.75rem 0;
-  z-index: 1000;
+  background: #fff;
+  transition: all 0.5s;
+  z-index: 1024;
+  border-bottom: 1px solid rgba(25, 119, 204, 0.1);
+  box-shadow: 0px 2px 15px rgba(25, 119, 204, 0.1);
+  padding: 0.5rem 0;
 }
 
 @media (prefers-color-scheme: dark) {
+  #topbar {
+    background: #0f1720;
+    border-bottom: 1px solid #1a2332;
+  }
   .navbar-clinic {
-    background: linear-gradient(180deg, rgba(15, 23, 32, 0.95), rgba(15, 23, 32, 0.85));
-    border-bottom-color: rgba(11, 110, 253, 0.15);
+    background: rgba(15, 23, 32, 0.98);
+    border-bottom-color: rgba(25, 119, 204, 0.15);
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.5);
   }
 }
 

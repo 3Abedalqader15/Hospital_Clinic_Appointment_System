@@ -1,42 +1,26 @@
-﻿using Hospital_Clinic_Appointment_System.Entities;
-using Hospital_Clinic_Appointment_System.Models;
+using Hospital_Clinic_Appointment_System.Entities;
 
-namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories
+namespace Hospital_Clinic_Appointment_System.Repositories.IRepositories;
+
+public interface IAppointmentRepository : IGenericRepository<Appointment>
 {
-    public interface IAppointmentRepository : IGenericRepository<Appointment>
-    {
-        Task<IEnumerable<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId);
+    Task<IEnumerable<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId);
 
-        Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId);
+    Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId);
 
-        Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date);
-    
-        Task<IEnumerable<Appointment>> GetAppointmentsByStatusAsync(string status);
-    
-        Task<IEnumerable<Appointment>> GetTodaysAppointmentsAsync (int doctorId);
+    Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date);
 
-        Task<IEnumerable<Appointment>> GetThisWeekAppointmentsAsync();
+    Task<IEnumerable<Appointment>> GetAppointmentsByStatusAsync(string status);
 
-        Task<IEnumerable<Appointment>> GetAllAppointmentsWithDetailsAsync();
+    Task<IEnumerable<Appointment>> GetAllAppointmentsWithDetailsAsync();
 
-        Task<bool> CancelAppointmentAsync(int appointmentId);
+    Task<bool> CancelAppointmentAsync(int appointmentId);
 
-        Task<bool> CompleteAppointmentAsync(int appointmentId, string? notes = null);
+    Task<bool> CompleteAppointmentAsync(int appointmentId, string? notes = null);
 
-        Task<bool> MarkAsNoShowAsync(int appointmentId);
+    Task<bool> MarkAsNoShowAsync(int appointmentId);
 
-        Task<bool> RescheduleNewAppointmentAsync(int appointmentId, DateTime newAppointmentDate);
+    Task<bool> RescheduleNewAppointmentAsync(int appointmentId, DateTime newAppointmentDate);
 
-        Task<int> DeleteOldCancelledAppointmentsAsync(DateTime beforeDate);
-
-        Task<bool> MarkReminderAsSentAsync(int appointmentId);
-
-
-
-
-
-
-
-
-    }
+    Task<bool> MarkReminderAsSentAsync(int appointmentId);
 }
