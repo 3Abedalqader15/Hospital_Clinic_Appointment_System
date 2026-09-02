@@ -1,10 +1,12 @@
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Pages.Shared;
 using Hospital_Clinic_Appointment_System.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_Clinic_Appointment_System.Pages.Admin
 {
+    [Authorize(Roles = "Admin")]
     public class UsersModel : AuthenticatedPageModel
     {
         public UsersModel(IApiClient apiClient) : base(apiClient)
@@ -27,11 +29,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             await LoadUsersAsync();
             return Page();
@@ -39,11 +36,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnPostUpdateAsync()
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             if (!ModelState.IsValid)
             {
@@ -62,11 +54,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var result = await ApiClient.DeleteAsync($"/api/User/{DeleteUserId}");
             StatusMessage = result.Success ? "User deleted successfully." : null;

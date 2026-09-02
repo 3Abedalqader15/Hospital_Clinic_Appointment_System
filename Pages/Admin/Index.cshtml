@@ -9,36 +9,48 @@
     <div class="alert alert-warning">@Model.ErrorMessage</div>
 }
 
-<div class="row g-4 mb-4">
+<div class="row g-4 mb-5">
     <div class="col-md-6 col-lg-3">
-        <div class="card border-0">
-            <div class="card-body text-center">
-                <div class="stat-number">@Model.UsersCount</div>
-                <div class="stat-label">Users</div>
+        <div class="card stat-card border-0 h-100">
+            <div class="card-body">
+                <div class="stat-icon-box bg-light-primary text-primary-dark">
+                    <i class="fas fa-users fs-3"></i>
+                </div>
+                <div class="stat-number fs-2 fw-bold text-primary">@Model.UsersCount</div>
+                <div class="stat-label text-secondary fw-semibold">Total Users</div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card border-0">
-            <div class="card-body text-center">
-                <div class="stat-number">@Model.DoctorsCount</div>
-                <div class="stat-label">Doctors</div>
+        <div class="card stat-card border-0 h-100">
+            <div class="card-body">
+                <div class="stat-icon-box bg-light-success text-success">
+                    <i class="fas fa-user-md fs-3"></i>
+                </div>
+                <div class="stat-number fs-2 fw-bold text-success">@Model.DoctorsCount</div>
+                <div class="stat-label text-secondary fw-semibold">Doctors</div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card border-0">
-            <div class="card-body text-center">
-                <div class="stat-number">@Model.PatientsCount</div>
-                <div class="stat-label">Patients</div>
+        <div class="card stat-card border-0 h-100">
+            <div class="card-body">
+                <div class="stat-icon-box bg-info-light text-info-dark" style="background: var(--info-light); color: var(--info-dark);">
+                    <i class="fas fa-user-injured fs-3"></i>
+                </div>
+                <div class="stat-number fs-2 fw-bold text-info">@Model.PatientsCount</div>
+                <div class="stat-label text-secondary fw-semibold">Patients</div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card border-0">
-            <div class="card-body text-center">
-                <div class="stat-number">@Model.AppointmentsCount</div>
-                <div class="stat-label">Appointments</div>
+        <div class="card stat-card border-0 h-100">
+            <div class="card-body">
+                <div class="stat-icon-box bg-warning-light text-warning-dark" style="background: var(--warning-light); color: var(--warning-dark);">
+                    <i class="fas fa-calendar-check fs-3"></i>
+                </div>
+                <div class="stat-number fs-2 fw-bold text-warning">@Model.AppointmentsCount</div>
+                <div class="stat-label text-secondary fw-semibold">Appointments</div>
             </div>
         </div>
     </div>
@@ -69,7 +81,15 @@
                         <td>@appointment.PatientName</td>
                         <td>@appointment.AppointmentDate.ToString("g")</td>
                         <td>
-                            <span class="badge badge-primary">@appointment.Status</span>
+                            @if(appointment.Status == "Pending") {
+                                <span class="badge badge-warning"><i class="fas fa-clock me-1"></i> @appointment.Status</span>
+                            } else if (appointment.Status == "Confirmed") {
+                                <span class="badge badge-success"><i class="fas fa-check-circle me-1"></i> @appointment.Status</span>
+                            } else if (appointment.Status == "Cancelled") {
+                                <span class="badge badge-danger"><i class="fas fa-times-circle me-1"></i> @appointment.Status</span>
+                            } else {
+                                <span class="badge badge-primary">@appointment.Status</span>
+                            }
                         </td>
                     </tr>
                 }

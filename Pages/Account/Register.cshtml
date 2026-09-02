@@ -194,7 +194,7 @@
                         </div>
                     }
 
-                    <form method="post">
+                    <form method="post" asp-antiforgery="true">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-medium"></div>
 
                         <div class="row">
@@ -215,7 +215,7 @@
                                     <span class="input-group-text bg-transparent">
                                         <i class="fas fa-phone-alt"></i>
                                     </span>
-                                    <input asp-for="Register.Phone_Number" class="form-control with-icon" placeholder="+1 (555) 000-0000" />
+                                    <input asp-for="Register.Phone_Number" class="form-control with-icon" placeholder="07XXXXXXXX" />
                                 </div>
                                 <span asp-validation-for="Register.Phone_Number" class="text-danger small mt-1 d-block"></span>
                             </div>

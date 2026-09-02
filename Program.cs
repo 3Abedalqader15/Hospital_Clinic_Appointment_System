@@ -4,7 +4,7 @@ using Hospital_Clinic_Appointment_System.Repositories;
 using Hospital_Clinic_Appointment_System.Repositories.IRepositories;
 using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,7 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
-   
     options.Filters.Add<ValidateModelAttribute>();
 });
 builder.Services.AddRazorPages();
@@ -27,15 +26,30 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("default")
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+builder.Services.AddHttpClient(); // also register the unnamed client
 
 
 
-    //  JWT Authentication
+    // Authentication (Cookie for UI, JWT for API)
     builder.Services.AddAuthentication(options =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        })
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            options.LogoutPath = "/Account/Logout";
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.ExpireTimeSpan = TimeSpan.FromHours(2);
         })
         .AddJwtBearer(options =>
         {
@@ -63,7 +77,7 @@ builder.Services.AddHttpClient();
                 OnMessageReceived = ctx =>
                 {
                     // Optionally inspect the raw Authorization header
-                    Console.WriteLine("Auth header: " + ctx.Request.Headers["Authorization"].ToString());
+                    Console.WriteLine("Auth header: " + ctx.Request.Headers.Authorization.ToString());
                     return Task.CompletedTask;
                 }
             };
@@ -80,11 +94,38 @@ builder.Services.AddHttpClient();
     //  Authorization Policies
     builder.Services.AddAuthorization(options =>
     {
-        options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-        options.AddPolicy("DoctorOnly", policy => policy.RequireRole("Doctor"));
-        options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
-        options.AddPolicy("DoctorOrAdmin", policy => policy.RequireRole("Doctor", "Admin"));
-        options.AddPolicy("PatientOrAdmin", policy => policy.RequireRole("Patient", "Admin"));
+        var defaultPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+        options.DefaultPolicy = defaultPolicy;
+
+        options.AddPolicy("AdminOnly", policy => {
+            policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
+            policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+            policy.RequireRole("Admin");
+        });
+        options.AddPolicy("DoctorOnly", policy => {
+            policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
+            policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+            policy.RequireRole("Doctor");
+        });
+        options.AddPolicy("PatientOnly", policy => {
+            policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
+            policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+            policy.RequireRole("Patient");
+        });
+        options.AddPolicy("DoctorOrAdmin", policy => {
+            policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
+            policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+            policy.RequireRole("Doctor", "Admin");
+        });
+        options.AddPolicy("PatientOrAdmin", policy => {
+            policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
+            policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+            policy.RequireRole("Patient", "Admin");
+        });
     });
 
 

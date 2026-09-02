@@ -1,10 +1,12 @@
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Pages.Shared;
 using Hospital_Clinic_Appointment_System.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_Clinic_Appointment_System.Pages.Admin
 {
+    [Authorize(Roles = "Admin")]
     public class AppointmentsModel : AuthenticatedPageModel
     {
         public AppointmentsModel(IApiClient apiClient) : base(apiClient)
@@ -17,11 +19,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             await LoadAppointmentsAsync();
             return Page();
@@ -50,11 +47,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnPostDeleteAsync(int appointmentId)
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var result = await ApiClient.DeleteAsync($"/api/Appointment/{appointmentId}");
             return await HandleActionResultAsync(result, "Appointment deleted successfully.");
@@ -62,11 +54,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnPostRescheduleAsync(int appointmentId, DateTime newAppointmentDate)
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var payload = new RescheduleAppointmentDto { NewAppointmentDate = newAppointmentDate };
             var result = await ApiClient.PostAsync($"/api/Appointment/{appointmentId}/Reschedule", payload);
@@ -75,11 +62,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         private async Task<IActionResult> RunActionAsync(string url, string successMessage)
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var result = await ApiClient.PostAsync(url, new { });
             return await HandleActionResultAsync(result, successMessage);

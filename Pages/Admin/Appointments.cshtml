@@ -39,7 +39,17 @@
                         <td>@appointment.DoctorName</td>
                         <td>@appointment.PatientName</td>
                         <td>@appointment.AppointmentDate.ToString("g")</td>
-                        <td>@appointment.Status</td>
+                        <td>
+                            @if(appointment.Status == "Pending") {
+                                <span class="badge badge-warning"><i class="fas fa-clock me-1"></i> @appointment.Status</span>
+                            } else if (appointment.Status == "Confirmed") {
+                                <span class="badge badge-success"><i class="fas fa-check-circle me-1"></i> @appointment.Status</span>
+                            } else if (appointment.Status == "Cancelled") {
+                                <span class="badge badge-danger"><i class="fas fa-times-circle me-1"></i> @appointment.Status</span>
+                            } else {
+                                <span class="badge badge-primary">@appointment.Status</span>
+                            }
+                        </td>
                         <td class="text-truncate" style="max-width: 200px;">@appointment.Reason</td>
                         <td class="text-end">
                             <div class="d-flex flex-column gap-2 align-items-end">

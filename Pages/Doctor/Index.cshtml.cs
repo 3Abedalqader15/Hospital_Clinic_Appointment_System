@@ -2,9 +2,11 @@ using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Pages.Shared;
 using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hospital_Clinic_Appointment_System.Pages.Doctor
 {
+    [Authorize(Roles = "Doctor")]
     public class IndexModel : AuthenticatedPageModel
     {
         public IndexModel(IApiClient apiClient) : base(apiClient)
@@ -17,11 +19,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Doctor
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var guard = RequireAuthentication("Doctor");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var doctorResult = await ApiClient.GetAsync<DoctorDetailsDto>("/api/Doctor/Me");
             if (!doctorResult.Success || doctorResult.Data == null)

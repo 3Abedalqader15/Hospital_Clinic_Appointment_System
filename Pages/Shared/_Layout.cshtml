@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,21 +20,22 @@
     <!-- Modern CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/modern-design.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Hospital_Clinic_Appointment_System.styles.css" asp-append-version="true" />
 </head>
 <body class="mediClinic-body">
     @{
-        var userInfo = Context.Session.GetObject<UserInfoDto>(SessionKeys.UserInfo);
-        var isAuthenticated = !string.IsNullOrWhiteSpace(Context.Session.GetString(SessionKeys.AuthToken));
-        var roles = userInfo?.Roles ?? new List<string>();
-        var isAdmin = roles.Any(role => string.Equals(role, "Admin", StringComparison.OrdinalIgnoreCase));
-        var isDoctor = roles.Any(role => string.Equals(role, "Doctor", StringComparison.OrdinalIgnoreCase));
-        var isPatient = roles.Any(role => string.Equals(role, "Patient", StringComparison.OrdinalIgnoreCase));
+        var isAuthenticated = Context.User?.Identity?.IsAuthenticated == true;
+        var isAdmin = Context.User?.IsInRole("Admin") == true;
+        var isDoctor = Context.User?.IsInRole("Doctor") == true;
+        var isPatient = Context.User?.IsInRole("Patient") == true;
         var dashboardPage = isAdmin ? "/Admin/Index" : isDoctor ? "/Doctor/Index" : isPatient ? "/Patient/Index" : "/Index";
+        var isLandingPage = ViewData["IsLandingPage"] as bool? == true;
+        var navbarClass = isLandingPage ? "navbar-landing" : "mediClinic-navbar";
     }
     <!-- Navigation Bar -->
     <header class="mediClinic-header">
-        <nav class="navbar navbar-expand-lg navbar-dark mediClinic-navbar sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark @navbarClass sticky-top">
             <div class="container-fluid px-4">
                 <!-- Brand Logo -->
                 <a class="navbar-brand mediClinic-brand" asp-area="" asp-page="/Index" title="MediClinic Home">
@@ -120,12 +121,12 @@
                         @if (!isAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link mediClinic-nav-link" asp-page="/Account/Login">
+                                <a class="nav-link mediClinic-nav-link @(isLandingPage ? "btn-nav-login" : "")" asp-page="/Account/Login">
                                     <i class="fas fa-sign-in-alt me-2"></i>Login
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link mediClinic-nav-link" asp-page="/Account/Register">
+                            <li class="nav-item ms-lg-2">
+                                <a class="nav-link mediClinic-nav-link @(isLandingPage ? "btn-nav-signup" : "")" asp-page="/Account/Register">
                                     <i class="fas fa-user-plus me-2"></i>Register
                                 </a>
                             </li>
@@ -133,10 +134,11 @@
                         else
                         {
                             <li class="nav-item d-flex align-items-center text-white px-3">
-                                <i class="fas fa-user-circle me-2"></i>@(userInfo?.Name ?? "User")
+                                <i class="fas fa-user-circle me-2"></i>@(Context.User?.Identity?.Name ?? "User")
                             </li>
                             <li class="nav-item">
-                                <form method="post" asp-page="/Account/Logout" class="d-inline">
+                                <form method="post" action="/Account/Logout" class="d-inline">
+                                    @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-sm btn-outline-light">
                                         <i class="fas fa-sign-out-alt me-1"></i>Logout
                                     </button>

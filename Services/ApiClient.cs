@@ -45,6 +45,7 @@ namespace Hospital_Clinic_Appointment_System.Services
         public Task<ApiResult<T>> GetAsync<T>(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
+            AddAuthHeader(request);
             return SendAsync<T>(request);
         }
 
@@ -54,6 +55,7 @@ namespace Hospital_Clinic_Appointment_System.Services
             {
                 Content = JsonContent.Create(payload)
             };
+            AddAuthHeader(request);
             return SendAsync<T>(request);
         }
 
@@ -63,6 +65,7 @@ namespace Hospital_Clinic_Appointment_System.Services
             {
                 Content = JsonContent.Create(payload)
             };
+            AddAuthHeader(request);
             return SendAsync(request);
         }
 
@@ -72,13 +75,25 @@ namespace Hospital_Clinic_Appointment_System.Services
             {
                 Content = JsonContent.Create(payload)
             };
+            AddAuthHeader(request);
             return SendAsync(request);
         }
 
         public Task<ApiResult> DeleteAsync(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
+            AddAuthHeader(request);
             return SendAsync(request);
+        }
+
+        // Attach JWT token to the individual request (thread-safe)
+        private void AddAuthHeader(HttpRequestMessage request)
+        {
+            var token = httpContextAccessor.HttpContext?.Session.GetString(SessionKeys.AuthToken);
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
         }
 
         private async Task<ApiResult<T>> SendAsync<T>(HttpRequestMessage request)
@@ -125,19 +140,12 @@ namespace Hospital_Clinic_Appointment_System.Services
 
         private HttpClient CreateClient()
         {
-            var client = httpClientFactory.CreateClient();
+            var client = httpClientFactory.CreateClient("default");
             var request = httpContextAccessor.HttpContext?.Request;
             if (request != null)
             {
                 client.BaseAddress = new Uri($"{request.Scheme}://{request.Host}");
             }
-
-            var token = httpContextAccessor.HttpContext?.Session.GetString(SessionKeys.AuthToken);
-            if (!string.IsNullOrWhiteSpace(token))
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
-
             return client;
         }
     }

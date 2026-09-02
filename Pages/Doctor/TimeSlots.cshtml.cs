@@ -2,9 +2,11 @@ using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Pages.Shared;
 using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hospital_Clinic_Appointment_System.Pages.Doctor
 {
+    [Authorize(Roles = "Doctor")]
     public class TimeSlotsModel : AuthenticatedPageModel
     {
         public TimeSlotsModel(IApiClient apiClient) : base(apiClient)
@@ -30,11 +32,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Doctor
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var guard = RequireAuthentication("Doctor");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             await LoadTimeSlotsAsync();
             return Page();
@@ -42,11 +39,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Doctor
 
         public async Task<IActionResult> OnPostCreateAsync()
         {
-            var guard = RequireAuthentication("Doctor");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var doctorId = await GetDoctorIdAsync();
             if (doctorId == null)
@@ -75,11 +67,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Doctor
 
         public async Task<IActionResult> OnPostUpdateAsync()
         {
-            var guard = RequireAuthentication("Doctor");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var result = await ApiClient.PutAsync($"/api/TimeSlot/{UpdateTimeSlotId}", UpdateTimeSlot);
             StatusMessage = result.Success ? "Time slot updated successfully." : null;
@@ -91,11 +78,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Doctor
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            var guard = RequireAuthentication("Doctor");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var result = await ApiClient.DeleteAsync($"/api/TimeSlot/{DeleteTimeSlotId}");
             StatusMessage = result.Success ? "Time slot deleted successfully." : null;

@@ -1,7 +1,10 @@
+using System.Security.Claims;
 using System.Text.Json;
 using Hospital_Clinic_Appointment_System.Helpers;
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,6 +12,7 @@ namespace Hospital_Clinic_Appointment_System.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+        private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
         private readonly IApiClient apiClient;
 
         public RegisterModel(IApiClient apiClient)
@@ -47,11 +51,11 @@ namespace Hospital_Clinic_Appointment_System.Pages.Account
                 return Page();
             }
 
-            SaveSession(result.Data);
+            await SaveSessionAsync(result.Data);
             return RedirectToDashboard(result.Data.User);
         }
 
-        private void SaveSession(LoginResponseDto response)
+        private async Task SaveSessionAsync(LoginResponseDto response)
         {
             if (!string.IsNullOrWhiteSpace(response.Token))
             {
@@ -61,12 +65,33 @@ namespace Hospital_Clinic_Appointment_System.Pages.Account
             if (response.User != null)
             {
                 HttpContext.Session.SetObject(SessionKeys.UserInfo, response.User);
+
+                // Create Native Cookie Authentication
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, response.User.Name ?? response.User.Email ?? "User"),
+                    new Claim(ClaimTypes.NameIdentifier, response.User.Id.ToString()),
+                    new Claim(ClaimTypes.Email, response.User.Email ?? "")
+                };
+
+                if (response.User.Roles != null)
+                {
+                    foreach (var role in response.User.Roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
+                }
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             }
         }
 
         private IActionResult RedirectToDashboard(UserInfoDto? userInfo)
         {
-            var roles = userInfo?.Roles ?? new List<string>();
+            var roles = userInfo?.Roles ?? [];
             if (roles.Contains("Admin", StringComparer.OrdinalIgnoreCase))
             {
                 return RedirectToPage("/Admin/Index");
@@ -85,7 +110,7 @@ namespace Hospital_Clinic_Appointment_System.Pages.Account
             return RedirectToPage("/Index");
         }
 
-        private string GetErrorMessage(ApiResult<LoginResponseDto> result)
+        private static string GetErrorMessage(ApiResult<LoginResponseDto> result)
         {
             if (!string.IsNullOrWhiteSpace(result.Data?.Message))
             {
@@ -99,10 +124,7 @@ namespace Hospital_Clinic_Appointment_System.Pages.Account
 
             try
             {
-                var payload = JsonSerializer.Deserialize<LoginResponseDto>(result.Error, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+                var payload = JsonSerializer.Deserialize<LoginResponseDto>(result.Error, JsonOptions);
 
                 if (!string.IsNullOrWhiteSpace(payload?.Message))
                 {

@@ -2,9 +2,11 @@ using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Pages.Shared;
 using Hospital_Clinic_Appointment_System.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hospital_Clinic_Appointment_System.Pages.Patient
 {
+    [Authorize(Roles = "Patient")]
     public class DoctorsModel : AuthenticatedPageModel
     {
         public DoctorsModel(IApiClient apiClient) : base(apiClient)
@@ -21,11 +23,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Patient
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var guard = RequireAuthentication("Patient");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             await LoadDoctorsAsync();
             return Page();
@@ -33,11 +30,6 @@ namespace Hospital_Clinic_Appointment_System.Pages.Patient
 
         public async Task<IActionResult> OnPostBookAsync()
         {
-            var guard = RequireAuthentication("Patient");
-            if (guard != null)
-            {
-                return guard;
-            }
 
             var patientId = await GetPatientIdAsync();
             if (patientId == null)

@@ -1,10 +1,12 @@
 using Hospital_Clinic_Appointment_System.Models;
 using Hospital_Clinic_Appointment_System.Pages.Shared;
 using Hospital_Clinic_Appointment_System.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_Clinic_Appointment_System.Pages.Admin
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : AuthenticatedPageModel
     {
         public IndexModel(IApiClient apiClient) : base(apiClient)
@@ -20,11 +22,7 @@ namespace Hospital_Clinic_Appointment_System.Pages.Admin
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var guard = RequireAuthentication("Admin");
-            if (guard != null)
-            {
-                return guard;
-            }
+
 
             var usersResult = await ApiClient.GetAsync<List<UserDto>>("/api/User/All");
             var doctorsResult = await ApiClient.GetAsync<List<DoctorListDto>>("/api/Doctor/All");
