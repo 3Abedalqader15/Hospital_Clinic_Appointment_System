@@ -45,16 +45,16 @@ public class UsersModel(IApiClient apiClient, IUserRepository userRepository) : 
                 var user = await userRepository.GetByIdAsync(UpdateUserId);
                 if (user != null)
                 {
-                    user.Name = UpdateUser.Name;
-                    var existingUser = await userRepository.GetUserByEmailAsync(UpdateUser.Email);
+                    user.Name = UpdateUser.Name!;
+                    var existingUser = await userRepository.GetUserByEmailAsync(UpdateUser.Email!);
                     if (existingUser != null && existingUser.Id != UpdateUserId)
                     {
                         ErrorMessage = "Email already exists.";
                     }
                     else
                     {
-                        user.Email = UpdateUser.Email;
-                        user.Phone_Number = UpdateUser.Phone_Number;
+                        user.Email = UpdateUser.Email!;
+                        user.Phone_Number = UpdateUser.Phone_Number!;
                         userRepository.Update(user);
                         await userRepository.SaveChangesAsync();
                         StatusMessage = "User updated successfully.";
@@ -104,13 +104,13 @@ public class UsersModel(IApiClient apiClient, IUserRepository userRepository) : 
             try
             {
                 var allUsers = await userRepository.GetAllWithIncludesAsync();
-                Users = allUsers.Select(u => new UserDto
+                Users = [.. allUsers.Select(u => new UserDto
                 {
                     Id = u.Id,
                     Name = u.Name,
                     Email = u.Email,
                     Phone_Number = u.Phone_Number
-                }).ToList();
+                })];
             }
             catch (Exception ex)
             {

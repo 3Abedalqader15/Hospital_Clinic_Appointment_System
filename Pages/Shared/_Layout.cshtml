@@ -1,247 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="MediClinic - Healthcare Website Design" />
-    <title>@ViewData["Title"] - MediClinic</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>@ViewData["Title"] - Clinic</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <!-- Favicons -->
+  <link href="~/assets/img/favicon.png" rel="icon">
+  <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+  <!-- Vendor CSS Files -->
+  <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="~/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-    <!-- Modern CSS -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/modern-design.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Hospital_Clinic_Appointment_System.styles.css" asp-append-version="true" />
+  <!-- Main CSS File -->
+  <link href="~/assets/css/main.css" rel="stylesheet">
+  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/Hospital_Clinic_Appointment_System.styles.css" asp-append-version="true" />
 </head>
-<body class="mediClinic-body">
+
+<body class="index-page">
     @{
         var isAuthenticated = Context.User?.Identity?.IsAuthenticated == true;
         var isAdmin = Context.User?.IsInRole("Admin") == true;
         var isDoctor = Context.User?.IsInRole("Doctor") == true;
         var isPatient = Context.User?.IsInRole("Patient") == true;
         var dashboardPage = isAdmin ? "/Admin/Index" : isDoctor ? "/Doctor/Index" : isPatient ? "/Patient/Index" : "/Index";
-        var isLandingPage = ViewData["IsLandingPage"] as bool? == true;
     }
 
-    <!-- ======= Top Bar ======= -->
-    <div id="topbar" class="d-flex align-items-center fixed-top">
-        <div class="container d-flex justify-content-between">
-            <div class="contact-info d-flex align-items-center">
-                <i class="fas fa-envelope d-flex align-items-center"><span class="ms-2">contact@mediclinic.com</span></i>
-                <i class="fas fa-phone-alt d-flex align-items-center ms-4"><span class="ms-2">+1 5589 55488 55</span></i>
-            </div>
-            <div class="social-links d-none d-md-flex align-items-center">
-                <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
-            </div>
+  <header id="header" class="header fixed-top">
+
+    <div class="topbar d-flex align-items-center dark-background">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center">
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">contact@example.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
         </div>
+        <div class="social-links d-none d-md-flex align-items-center">
+          <a href="#!" class="twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#!" class="facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#!" class="instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#!" class="linkedin"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-cente">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a asp-page="/Index" class="logo d-flex align-items-center">
+          <h1 class="sitename">Clinic</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a asp-page="/Index" class="active">Home</a></li>
+            
+            @if (isAuthenticated)
+            {
+                <li><a asp-page="@dashboardPage">Dashboard</a></li>
+            }
+
+            @if (isAdmin)
+            {
+                <li class="dropdown"><a href="#"><span>Admin</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li><a asp-page="/Admin/Index">Overview</a></li>
+                        <li><a asp-page="/Admin/Users">Users</a></li>
+                        <li><a asp-page="/Admin/Doctors">Doctors</a></li>
+                        <li><a asp-page="/Admin/Patients">Patients</a></li>
+                        <li><a asp-page="/Admin/Appointments">Appointments</a></li>
+                        <li><a asp-page="/Admin/TimeSlots">Time Slots</a></li>
+                    </ul>
+                </li>
+            }
+            @if (isDoctor)
+            {
+                <li class="dropdown"><a href="#"><span>Doctor Portal</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li><a asp-page="/Doctor/Index">Overview</a></li>
+                        <li><a asp-page="/Doctor/Appointments">Appointments</a></li>
+                        <li><a asp-page="/Doctor/TimeSlots">Time Slots</a></li>
+                    </ul>
+                </li>
+            }
+            @if (isPatient)
+            {
+                <li class="dropdown"><a href="#"><span>Patient Portal</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li><a asp-page="/Patient/Index">Overview</a></li>
+                        <li><a asp-page="/Patient/Doctors">Doctors</a></li>
+                        <li><a asp-page="/Patient/Appointments">Appointments</a></li>
+                    </ul>
+                </li>
+            }
+
+            @if (!isAuthenticated)
+            {
+                <li><a asp-page="/Account/Login" class="btn-getstarted" style="margin-left: 20px; padding: 10px 20px; border-radius: 4px; background: var(--accent-color); color: white;">Make an Appointment</a></li>
+            }
+            else
+            {
+                <li class="dropdown"><a href="#"><span><i class="bi bi-person-circle"></i> @(Context.User?.Identity?.Name ?? "User")</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li>
+                            <form method="post" action="/Account/Logout" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="dropdown-item text-danger py-2 border-0 bg-transparent" style="text-align:left; padding-left:20px;">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            }
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+      </div>
+
     </div>
 
-    <!-- ======= Header ======= -->
-    <header class="mediClinic-header fixed-top" style="top: 40px;">
-        <nav class="navbar navbar-expand-lg navbar-clinic">
-            <div class="container">
-                <!-- Brand Logo -->
-                <a class="navbar-brand mediClinic-brand" asp-area="" asp-page="/Index" title="MediClinic Home">
-                    <div class="brand-wrapper d-flex align-items-center">
-                        <div class="brand-icon-box" style="color: var(--clinic-primary); font-size: 1.8rem;">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <div class="brand-text ms-2">
-                            <span class="brand-name fw-bold" style="color: #2c4964; font-size: 1.5rem; letter-spacing: 1px;">Medi</span><span class="brand-accent fw-bold" style="color: var(--clinic-primary); font-size: 1.5rem; letter-spacing: 1px;">Clinic</span>
-                        </div>
-                    </div>
-                </a>
+  </header>
 
-                <!-- Mobile Toggle -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
-                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation" style="border: none; color: var(--clinic-primary);">
-                    <i class="fas fa-bars fa-lg"></i>
-                </button>
+  <main class="main">
+    <div style="padding-top: 100px;">
+        @RenderBody()
+    </div>
+  </main>
 
-                <!-- Navigation Menu -->
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav ms-auto align-items-lg-center">
-                        <li class="nav-item">
-                            <a class="nav-link fw-semibold px-3" style="color: #2c4964;" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        
-                        @if (isAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link fw-semibold px-3" style="color: #2c4964;" asp-page="@dashboardPage">Dashboard</a>
-                            </li>
-                        }
-                        
-                        @if (isAdmin)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link fw-semibold px-3 dropdown-toggle" style="color: #2c4964;" href="#" role="button" data-bs-toggle="dropdown">
-                                    Admin
-                                </a>
-                                <ul class="dropdown-menu shadow-sm border-0 mt-2">
-                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Index">Overview</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Users">Users</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Doctors">Doctors</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Patients">Patients</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Admin/Appointments">Appointments</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Admin/TimeSlots">Time Slots</a></li>
-                                </ul>
-                            </li>
-                        }
-                        @if (isDoctor)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link fw-semibold px-3 dropdown-toggle" style="color: #2c4964;" href="#" role="button" data-bs-toggle="dropdown">
-                                    Doctor Portal
-                                </a>
-                                <ul class="dropdown-menu shadow-sm border-0 mt-2">
-                                    <li><a class="dropdown-item py-2" asp-page="/Doctor/Index">Overview</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Doctor/Appointments">Appointments</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Doctor/TimeSlots">Time Slots</a></li>
-                                </ul>
-                            </li>
-                        }
-                        @if (isPatient)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link fw-semibold px-3 dropdown-toggle" style="color: #2c4964;" href="#" role="button" data-bs-toggle="dropdown">
-                                    Patient Portal
-                                </a>
-                                <ul class="dropdown-menu shadow-sm border-0 mt-2">
-                                    <li><a class="dropdown-item py-2" asp-page="/Patient/Index">Overview</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Patient/Doctors">Doctors</a></li>
-                                    <li><a class="dropdown-item py-2" asp-page="/Patient/Appointments">Appointments</a></li>
-                                </ul>
-                            </li>
-                        }
+  <footer id="footer" class="footer-16 footer position-relative">
+    <div class="container">
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a asp-page="/Index" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Clinic</span>
+              </a>
+              <p class="brand-description">Crafting exceptional digital experiences through thoughtful design and innovative solutions that elevate your brand presence.</p>
 
-                        @if (!isAuthenticated)
-                        {
-                            <li class="nav-item ms-lg-3">
-                                <a class="btn btn-primary rounded-pill px-4 py-2" style="background: var(--clinic-primary); border: none;" asp-page="/Account/Login">
-                                    Make an Appointment
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item ms-lg-3 dropdown">
-                                <a class="btn btn-outline-primary rounded-pill px-4 py-2 dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user-circle me-2"></i>@(Context.User?.Identity?.Name ?? "User")
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
-                                    <li>
-                                        <form method="post" action="/Account/Logout" class="m-0">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="dropdown-item text-danger py-2">
-                                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                    </ul>
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>123 Creative Boulevard, Design District, NY 10012</span>
                 </div>
+                <div class="contact-item">
+                  <i class="bi bi-telephone"></i>
+                  <span>+1 (555) 987-6543</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-envelope"></i>
+                  <span>hello@designstudio.com</span>
+                </div>
+              </div>
             </div>
-        </nav>
-    </header>
+          </div>
 
-    <!-- Main Content -->
-    <main role="main" class="mediClinic-main" style="margin-top: 120px; min-height: 70vh;">
-        <div class="container pb-5">
-            @RenderBody()
-        </div>
-    </main>
-
-    <!-- ======= Footer ======= -->
-    <footer id="footer" style="background: #f1f7fd; color: #444444; font-size: 14px; position: relative;">
-        <div class="footer-top border-top py-5" style="border-color: #d6eaff !important;">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-lg-3 col-md-6 footer-contact">
-                        <h3 class="fw-bold mb-4" style="color: #2c4964; font-size: 24px;">MediClinic</h3>
-                        <p class="mb-0 text-secondary">
-                            A108 Adam Street <br>
-                            New York, NY 535022<br>
-                            United States <br><br>
-                            <strong>Phone:</strong> +1 5589 55488 55<br>
-                            <strong>Email:</strong> info@example.com<br>
-                        </p>
-                    </div>
-
-                    <div class="col-lg-2 col-md-6 footer-links mt-4 mt-md-0">
-                        <h4 class="fw-bold mb-4" style="color: #2c4964; font-size: 16px;">Useful Links</h4>
-                        <ul class="list-unstyled">
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a asp-page="/Index" class="text-decoration-none text-secondary">Home</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">About us</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Services</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Terms of service</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a asp-page="/Privacy" class="text-decoration-none text-secondary">Privacy policy</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 footer-links mt-4 mt-lg-0">
-                        <h4 class="fw-bold mb-4" style="color: #2c4964; font-size: 16px;">Our Services</h4>
-                        <ul class="list-unstyled">
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">General Practice</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Cardiology</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Neurology</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Pediatrics</a></li>
-                            <li class="mb-3"><i class="fas fa-chevron-right me-2" style="color: var(--clinic-primary); font-size: 12px;"></i> <a href="#" class="text-decoration-none text-secondary">Dental Care</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 footer-newsletter mt-4 mt-lg-0">
-                        <h4 class="fw-bold mb-4" style="color: #2c4964; font-size: 16px;">Join Our Newsletter</h4>
-                        <p class="text-secondary">Subscribe to our newsletter to receive the latest health news and tips directly to your inbox.</p>
-                        <form action="" method="post" class="d-flex mt-4 bg-white p-1 rounded-pill" style="box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.08);">
-                            <input type="email" name="email" class="form-control border-0 bg-transparent shadow-none" placeholder="Enter your email" style="padding-left: 15px;">
-                            <input type="submit" value="Subscribe" class="btn btn-primary rounded-pill px-4" style="background: var(--clinic-primary); border: none;">
-                        </form>
-                    </div>
-
+          <div class="col-lg-7">
+            <div class="footer-nav-wrapper">
+              <div class="row">
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Studio</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Our Story</a>
+                      <a href="#!">Design Process</a>
+                      <a href="#!">Portfolio</a>
+                    </nav>
+                  </div>
                 </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Services</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Brand Identity</a>
+                      <a href="#!">Web Design</a>
+                      <a href="#!">Mobile Apps</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Resources</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Design Blog</a>
+                      <a href="#!">Style Guide</a>
+                      <a href="#!">Free Assets</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Connect</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Start Project</a>
+                      <a href="#!">Schedule Call</a>
+                      <a href="#!">Join Newsletter</a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="container d-md-flex py-4" style="background: #e6f2fb; border-top: 1px solid #d6eaff; max-width: 100%;">
-            <div class="container d-md-flex">
-                <div class="me-md-auto text-center text-md-start">
-                    <div class="copyright text-secondary">
-                        &copy; Copyright <strong><span style="color: #2c4964;">MediClinic</span></strong>. All Rights Reserved
-                    </div>
-                    <div class="credits mt-1 pt-1" style="font-size: 13px;">
-                        Designed with <i class="fas fa-heart text-danger"></i> for Healthcare Excellence
-                    </div>
-                </div>
-                <div class="social-links text-center text-md-right pt-3 pt-md-0 d-flex gap-2">
-                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="btn btn-primary btn-sm rounded-circle d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; background: var(--clinic-primary); border: none;"><i class="fab fa-linkedin-in"></i></a>
-                </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="copyright">
+                <p>© <span class="sitename">Clinic</span>. All rights reserved.</p>
+              </div>
             </div>
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+                <a href="#!">Cookie Policy</a>
+              </div>
+            </div>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </footer>
 
-    <!-- Scripts -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+  <!-- Scroll Top -->
+  <a href="#!" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    @await RenderSectionAsync("Scripts", required: false)
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="~/assets/vendor/php-email-form/validate.js"></script>
+  <script src="~/assets/vendor/aos/aos.js"></script>
+  <script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="~/assets/js/main.js"></script>
+  <script src="~/js/site.js" asp-append-version="true"></script>
+  @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
